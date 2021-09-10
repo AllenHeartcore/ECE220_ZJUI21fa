@@ -1,0 +1,24 @@
+# Ignore binary
+# Ignore all
+*
+# Unignore all with extensions
+!*.*
+# Unignore gold binaries
+!gold
+!gold-vm
+!gold-lab
+!Makefile
+# Unignore all dirs
+!*/
+
+*.obj
+*.sym
+*.var
+*.info
+*.o
+*.png
+
+.vscode/
+
+.DS_Store
+*.icloud
