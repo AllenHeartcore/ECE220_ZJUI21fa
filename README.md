@@ -48,8 +48,8 @@ available online. We encourage you to research other resources as well.
 ### Create Repository
 
 To create a repository for the class, first login at UIUC's Github at https://github-dev.cs.illinois.edu.
-Next, visit https://edu.cs.illinois.edu/create-ghe-repo/ece220-fa20-zjui/ to create a repository for this class. 
-Now, if you navigate to https://github-dev.cs.illinois.edu/ece220-fa20-zjui, you will see a repository under your NetID. 
+Next, visit https://edu.cs.illinois.edu/create-ghe-repo/ece220-fa21-zjui/ to create a repository for this class. 
+Now, if you navigate to https://github-dev.cs.illinois.edu/ece220-fa21-zjui, you will see a repository under your NetID. 
 Click on your NetID and you will be shown a page that shows the contents of your repository. 
 Initially, this repository will be empty but don't worry about that because it will be populated soon.
 
@@ -58,10 +58,10 @@ Initially, this repository will be empty but don't worry about that because it w
 On the upper-left side of the page, there is a button **Clone or download**.
 Click on the button and make sure it says **Clone with HTTPS**. If not, click on
 the **Use HTTPS** text. Copy the link shown in the window which should be of the
-form <https://github-dev.cs.illinois.edu/ece220-fa20-zjui/NetID.git>. In a terminal, navigate to the location where you would like to keep your files for ECE220. Type and paste the copied URL:
+form <https://github-dev.cs.illinois.edu/ece220-fa21-zjui/NetID.git>. In a terminal, navigate to the location where you would like to keep your files for ECE220. Type and paste the copied URL:
 
 ```
-git clone https://github-dev.cs.illinois.edu/ece220-fa20-zjui/NetID.git
+git clone https://github-dev.cs.illinois.edu/ece220-fa21-zjui/NetID.git
 ```
 
 This will clone the remote repository to your computer where you will be able to retrieve/submit/work on assignments. 
@@ -72,7 +72,7 @@ To retrieve assignments from the `release` repository you have to add it as a re
 
 ```
 cd NetID
-git remote add release https://github-dev.cs.illinois.edu/ece220-fa20-zjui/_release.git
+git remote add release https://github-dev.cs.illinois.edu/ece220-fa21-zjui/_release.git
 ```
 
 Check that the remote was added:
@@ -83,10 +83,10 @@ git remote -v
 You should see four lines of output, two for origin and two for release:
 
 ```
-origin  https://github-dev.cs.illinois.edu/ece220-fa20-zjui/NetID.git (fetch)
-origin  https://github-dev.cs.illinois.edu/ece220-fa20-zjui/NetID.git (push)
-release https://github-dev.cs.illinois.edu/ece220-fa20-zjui/_release.git (fetch)
-release https://github-dev.cs.illinois.edu/ece220-fa20-zjui/_release.git (push)
+origin  https://github-dev.cs.illinois.edu/ece220-fa21-zjui/NetID.git (fetch)
+origin  https://github-dev.cs.illinois.edu/ece220-fa21-zjui/NetID.git (push)
+release https://github-dev.cs.illinois.edu/ece220-fa21-zjui/_release.git (fetch)
+release https://github-dev.cs.illinois.edu/ece220-fa21-zjui/_release.git (push)
 ```
 
 ### Configure Repository
@@ -181,7 +181,7 @@ Verify that your submission are visible in the remote repository through a web b
 To avoid issues with having to pull code from the remote repository, a new
 branch called 'grade' will be created for you once the first assignment has been
 graded. You can view your grades through the web browser by navigating to 
-<https://github-dev.cs.illinois.edu/ece220-fa20-zjui/NetID.git> (replacing NetID with
+<https://github-dev.cs.illinois.edu/ece220-fa21-zjui/NetID.git> (replacing NetID with
 your own) and clicking on the button that says `Branch: master`. A dropdown with
 all available branches will appear. Click on the `grade` option. This will
 display a list of directories corresponding to each of your assignments. Inside
