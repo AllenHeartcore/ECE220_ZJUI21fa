@@ -1,6 +1,7 @@
 ; This is the program for ECE220FA21 @ ZJUI Institute, Machine Programming Problem I. 
 ; Written, commented and debugged by Chen, Ziyuan on 14 September 2021. 
 ; Refined by Chen, Ziyuan on 16 September 2021. 
+; Fixed a small bug, and commited on 20 September 2021. 
 ; Copyright © 2021 Chen, Ziyuan
 
                .ORIG      x3000
@@ -100,7 +101,6 @@ PrintDone       ST        R7, SaveR7
                 LD        R7, SaveR7
                 RET
 
-TestString     .STRINGZ   "This is a test string. "
 TenPowers      .FILL      10000
                .FILL      1000
                .FILL      100
@@ -117,5 +117,6 @@ SaveR4         .FILL      x0000
 SaveR5         .FILL      x0000
 SaveR6         .FILL      x0000
 SaveR7         .FILL      x0000
+TestString     .STRINGZ   "This is a test string. "
 
                .END
