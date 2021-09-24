@@ -1,0 +1,5 @@
+	.ORIG x38C0
+
+	.FILL #27
+
+	.END
