@@ -7,22 +7,60 @@
 	; the user (in R0).
 
 	; R0 -- token read from user
-	; R1 -- 
+	; R1 -- temp for processing token
 	; R2 -- 
 	; R3 -- 
 	; R4 -- 
-	; R5 -- 
+	; R5 -- stack I/O data / temp for judging emptiness
 	; R6 -- stack pointer (base is x8000)
 
 	LD R6,STKBASE	; initialize the stack
-	; Write your program here.  
-
+EVAL	ST R7,SAVE_R7
+	JSR TOKENIZE
+	LD R7,SAVE_R7
+	ADD R0,R0,#0
+	BRz ENDLINE
+	BRp OPEN
+	ADD R1,R0,#4
+	BRp CLOSE
+	BR EVAL
+OPEN	STR R0,R6,#0
+	ADD R6,R6,#-1
+	BR EVAL
+CLOSE	ADD R6,R6,#1
+	LD R5,STKBASE
+	NOT R5,R5
+	ADD R5,R5,R6
+	BRz STAT_NO
+	LDR R5,R6,#0
+	ADD R5,R0,R5
+	BRnp STAT_MM
+	BR EVAL
+ENDLINE	ADD R6,R6,#1
+	LD R5,STKBASE
+	NOT R5,R5
+	ADD R5,R5,R6
+	BRz STAT_V
+	BRnp STAT_IV
+STAT_NO	LD R6,STKBASE
+	LEA R0,NOOPEN
+	BR PRINT
+STAT_MM	LD R6,STKBASE
+	LEA R0,MISMAT
+	BR PRINT
+STAT_V	LEA R0,VALID
+	BR PRINT
+STAT_IV	LEA R0,INVALID
+	BR PRINT
+PRINT	PUTS
+	BRnzp EVAL
 
 	; Your program should actually never halt, but this
 	; instruction is here in case your code allows the LC-3
 	; to continue executing by accident.
 	HALT
 
+SAVE_R7	.FILL x0000
 	; Add data here if you need to do so.  Message strings have been
 	; provided already.
 
