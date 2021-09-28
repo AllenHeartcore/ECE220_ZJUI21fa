@@ -1,0 +1,51 @@
+
+Welcome to the LC-3 simulator.
+
+The contents of the LC-3 tools distribution, including sources, management
+tools, and data, are Copyright (c) 2003 Steven S. Lumetta.
+
+The LC-3 tools distribution is free software covered by the GNU General
+Public License, and you are welcome to modify it and/or distribute copies
+of it under certain conditions.  The file COPYING (distributed with the
+tools) specifies those conditions.  There is absolutely no warranty for
+the LC-3 tools distribution, as described in the file NO_WARRANTY (also
+distributed with the tools).
+
+Have fun.
+
+
+--- halting the LC-3 ---
+
+PC=x0494 IR=xB1AE PSR=x0400 (ZERO)
+R0=x0000 R1=x7FFF R2=x0000 R3=x0000 R4=x0000 R5=x0000 R6=x0000 R7=x0490 
+                   x0494 x0FF9 BRNZP TRAP_HALT
+Loaded "e4s1.obj" and set PC to x3800
+Loaded "e4s2.obj" and set PC to x3840
+Loaded "ids.obj" and set PC to x3880
+Loaded "../mp3.obj" and set PC to x3000
+ABALONE -> BABBLE
+Levenshtein distance = 4
+ABALONE
+-BABBLE
+
+
+--- halting the LC-3 ---
+
+PC=x0494 IR=xB1AE PSR=x0400 (ZERO)
+R0=x0000 R1=x7FFF R2=x0001 R3=x3807 R4=x0004 R5=x7FF9 R6=x8000 R7=x0490 
+                   x0494 x0FF9 BRNZP TRAP_HALT
+3FFC:                     0000 0000 FFFF 0001 FFFD 0001 0002 FFFD      ........
+4008: 0001 0003 FFFD 0001 0004 FFFD 0001 0005 FFFD 0001 0006 FFFD  ............
+4014: 0001 0007 FFFD 0001 0001 FFE8 0000 0001 FFE5 0002 0001 FFE5  ............
+4020: 0002 0002 FFFD 0001 0003 FFFD 0001 0004 FFFD 0001 0005 FFFD  ............
+402C: 0001 0006 FFFD 0001 0002 FFE8 0000 0001 FFE5 0002 0002 FFE5  ............
+4038: 0002 0001 FFE5 0002 0002 FFFD 0001 0003 FFFD 0001 0004 FFFD  ............
+4044: 0001 0005 FFFD 0001 0003 FFE8 0000 0002 FFE8 0000 0001 FFE5  ............
+4050: 0002 0002 FFFD 0001 0002 FFE5 0002 0003 FFE5 0002 0004 FFE5  ............
+405C: 0002 0005 FFE5 0002 0004 FFE8 0000 0003 FFE8 0000 0002 FFE5  ............
+4068: 0002 0002 FFE5 0002 0003 FFE5 0002 0003 FFE5 0002 0004 FFE5  ............
+4074: 0002 0005 FFE5 0002 0005 FFE8 0000 0004 FFE8 0000 0003 FFE8  ............
+4080: 0000 0003 FFE5 0002 0002 FFE5 0002 0003 FFFD 0001 0004 FFE5  ............
+408C: 0002 0005 FFE5 0002 0006 FFE8 0000 0005 FFE8 0000 0004 FFE8  ............
+4098: 0000 0004 FFE5 0002 0003 FFE8 0000 0003 FFE5 0002 0004 FFE5  ............
+40A4: 0002 0004 FFE5 0002                                          ....        
