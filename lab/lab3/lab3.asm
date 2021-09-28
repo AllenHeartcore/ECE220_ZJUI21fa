@@ -1,26 +1,65 @@
 
 	; like most LC-3 programs, this one starts at address x3000
-	.ORIG x3000
+		.ORIG	x3000
 
 	; call the FIND_SECRET function; you can change the bit used
 	; (the value of R3), or you can add more calls so as to print 
 	; more than one string with one run
 
-	AND R3,R3,#0	; set R3 to 0
-	ADD R3,R3,#12	; add the bit to try--here, it's bit 5
-	JSR FIND_SECRET	; print the secret ... maybe
-	HALT		; all done!
+		AND	R2, R2, #0		; set R2 to 0
+		ADD	R2, R2, #15		; add the bit to try--here, it's bit 5
+Traverse	ADD	R3, R2, #0
+		JSR	FIND_SECRET		; print the secret ... maybe
+		LD	R0, Linefeed
+		OUT
+		ADD	R2, R2, #-1
+		BRn	TraverseDone
+		BRzp	Traverse
+TraverseDone	HALT				; all done!
 
-FIND_SECRET
 	; your code goes here!
 	
 	; first, decide how you want to use registers to keep track
 	; of information in the subroutine; don't forget that traps
 	; change R7
 	
-	RET
+	; R0 - StrPtr (Starting addr of string)
+	; R2 - BitMaskInd (Traverser)
+	; R3 - BitMaskInd (Input)
+	; R4 - BitMask
+	; R5 - BitVectPtr
+	; R6 - ListEntry -> BitVect -> Comparer
+
+FIND_SECRET	ST	R7, SaveR7
+		AND	R4, R4, #0		; <Phase 1: Init>
+		ADD	R4, R4, #1		; 	R4 = x0001
+		ADD	R3, R3, #0
+		BRz	InitStrPtr
+InitBitMask	ADD	R4, R4, R4		; 	R4 << 1
+		ADD	R3, R3, #-1
+		BRz	InitStrPtr		; 	R4 = BitMask
+		BRp	InitBitMask
+InitStrPtr	LEA	R0, SECRET
+SearchList	ADD	R5, R0, #0		; <Phase 2: Search>
+		LDR	R6, R5, #0		; 	Search for NUL (EOList)
+		BRz	SearchDone
+SearchEntry	ADD	R5, R5, #1		; 	Search for NUL (EOStr)
+		LDR	R6, R5, #-1
+		BRz	SearchVect
+		BRnp	SearchEntry
+SearchVect	LDR	R6, R5, #0		; 	R6 = BitVect
+		AND	R6, R4, R6		; 	Compare with BitMask
+		BRz	SearchNext
+		PUTS				; 	R0 = StrPtr (Valid)
+SearchNext	ADD	R0, R5, #1		; 	R0 = StrPtr (Next)
+		BRnzp	SearchList
+SearchDone	LD	R7, SaveR7
+		RET
 
 	; add data here if you need to do so
+
+SaveR7		.FILL	x0000
+Linefeed	.STRINGZ "\n"
 
 SECRET	; here are the secret strings; don't change these
 
