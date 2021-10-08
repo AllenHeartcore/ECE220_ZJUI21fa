@@ -1,0 +1,49 @@
+; This file is the test case for ece220-fa21 mp1 grading
+
+.ORIG x2700
+
+.FILL #65
+.FILL #39
+.FILL #124
+.FILL #46
+.FILL #100
+.FILL #65
+.FILL #50
+.FILL #90
+.FILL #125
+.FILL #77
+.FILL #117
+.FILL #95
+.FILL #85
+.FILL #45
+.FILL #96
+.FILL #38
+.FILL #58
+.FILL #37
+.FILL #121
+.FILL #33
+.FILL #104
+.FILL #80
+.FILL #107
+.FILL #39
+.FILL #100
+.FILL #49
+.FILL #84
+.FILL #63
+.FILL #57
+.FILL #32
+.FILL #61
+.FILL #54
+.FILL #122
+.FILL #114
+.FILL #41
+.FILL #110
+.FILL #33
+.FILL #105
+.FILL #104
+.FILL #84
+.FILL #112
+.FILL #0
+
+
+.END

@@ -1,0 +1,10 @@
+*.obj
+*.sym
+*.var
+*.info
+*.log
+
+.vscode/
+
+.DS_Store
+*.icloud
