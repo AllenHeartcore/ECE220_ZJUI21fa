@@ -1,243 +1,2365 @@
-/*									tab:8
- *
- * main.c - skeleton source file for ECE220 picture drawing program
+/* mp5.c - source file for ECE220 picture drawing program
  *
  * "Copyright (c) 2018 by Charles H. Zega, and Saransh Sinha."
  *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose, without fee, and without written agreement is
- * hereby granted, provided that the above copyright notice and the following
- * two paragraphs appear in all copies of this software.
+ * Permission to use, copy, modify, and distribute this software and its documentation for any purpose, without fee, and without written agreement
+ * is hereby granted, provided that the above copyright notice and the following two paragraphs appear in all copies of this software. 
  * 
- * IN NO EVENT SHALL THE AUTHOR OR THE UNIVERSITY OF ILLINOIS BE LIABLE TO 
- * ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
- * DAMAGES ARISING OUT  OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, 
- * EVEN IF THE AUTHOR AND/OR THE UNIVERSITY OF ILLINOIS HAS BEEN ADVISED 
- * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * IN NO EVENT SHALL THE AUTHOR OR THE UNIVERSITY OF ILLINOIS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL 
+ * DAMAGES ARISING OUT  OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE AUTHOR AND/OR THE UNIVERSITY OF ILLINOIS HAS BEEN ADVISED 
+ * OF THE POSSIBILITY OF SUCH DAMAGE. 
  * 
- * THE AUTHOR AND THE UNIVERSITY OF ILLINOIS SPECIFICALLY DISCLAIM ANY 
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE 
- * PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND NEITHER THE AUTHOR NOR
- * THE UNIVERSITY OF ILLINOIS HAS ANY OBLIGATION TO PROVIDE MAINTENANCE, 
- * SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS."
+ * THE AUTHOR AND THE UNIVERSITY OF ILLINOIS SPECIFICALLY DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND NEITHER THE AUTHOR NOR
+ * THE UNIVERSITY OF ILLINOIS HAS ANY OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS. 
  *
- * Author:	    Charles Zega, Saransh Sinha
- * Version:	    1
- * Creation Date:   12 February 2018
- * Filename:	    mp5.h
+ * Author:			Charles Zega, Saransh Sinha
+ * Version:			1
+ * Creation Date:	12 February 2018
+ * Filename:		mp5.c
  * History:
- *	CZ	1	12 February 2018
- *		First written.
+ *					CZ	1	12 February 2018	First written. 
  */
-#include "mp5.h"
 
-/*
-	You must write all your code only in this file, for all the functions!
+/*  ###### Copyright Information ######
+	This is the program for ECE220FA21 @ ZJUI Institute, Machine Programming Problem V. 
+	Written and commented by Chen, Ziyuan on 22 October 2021. 
+	Debugged and committed by Chen, Ziyuan on 23 October 2021. 
+	Copyright © 2021 Charles Zega, Saransh Sinha, and Ziyuan Chen. 
+
+	###### Functionality ######
+	Compile by running:		make clean
+	Execute by running:		./mp5 <type>
+	The program outputs:	A png image file named "out%d.png"%<type>. 
+	The types function as follows:
+		Type		Function			Parameters							Functionality
+		1			near_horizontal		(x_start, y_start, x_end, y_end)	Draws a line between two pixels (including endpoints). 
+		2			near_vertical		(x_start, y_start, x_end, y_end)	Draws a line between two pixels (including endpoints). 
+		3			draw_line			(x_start, y_start, x_end, y_end)	Draws a line between two pixels (including endpoints). 
+		4			draw_rect			(x_A, y_A, width, height)			Draws edges of the rectangle ABCD. (BCD coords. inferred)
+        5			draw_triangle		(x_A, y_A, x_B, y_B, x_C, y_C)		Draws edges of the triangle ABC. 
+		6			draw_parallelogram	(x_A, y_A, x_B, y_B, x_C, y_C)		Draws edges of the parallelogram ABCD. (D coord. inferred)
+		7			draw_circle			(x_cntr, y_cntr, r_inner, r_outer)	Draws a circular ring. 
+		8			rect_gradient		(x_start, y_start, width, height, start_color, end_color)	Fills a rect. with a horizontal gradient. 
+		default		draw_picture		None								Draws a customized image by calling other functions. 
+	Note: 	All functions return 0 if any of the pixels drawn are out of bounds, otherwise 1. 
+			No side effect claimed, yet this in no case serves as a guarantee. 
 */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "mp5.h"
+#define MASK_R 0x00FF0000
+#define MASK_G 0x0000FF00
+#define MASK_B 0x000000FF
+#define SGN(x) (x > 0 ? 1 : (x == 0 ? 0 : -1))
+#define SQUARE(x) (x) * (x)																// Parentheses are necessary
 
-
-/* 
- *  near_horizontal
- *	 
- *	 
- *	
- *	
- * INPUTS: x_start,y_start -- the coordinates of the pixel at one end of the line
- * 	   x_end, y_end    -- the coordinates of the pixel at the other end
- * OUTPUTS: draws a pixel to all points in between the two given pixels including
- *          the end points
- * RETURN VALUE: 0 if any of the pixels drawn are out of bounds, otherwise 1
- * SIDE EFFECTS: none
- */
-
-int32_t
-near_horizontal(int32_t x_start, int32_t y_start, int32_t x_end, int32_t y_end){
-	/* Your code goes here! */
-
-	return 0;
+int32_t near_horizontal (int32_t x_start, int32_t y_start, int32_t x_end, int32_t y_end) {
+	float x_1 = (float) x_start;								// Deal with coords. in float to avoid int division
+	float y_1 = (float) y_start;
+	float x_2 = (float) x_end;
+	float y_2 = (float) y_end;
+	uint8_t return_val = 1;																// Track the return value
+	if (x_start <= x_end) {
+		for (int32_t x = x_start; x <= x_end; x++) {
+			float y = (y_2 - y_1) * ((float) x - x_1) / (x_2 - x_1) + y_1;
+			return_val &= draw_dot(x, (int32_t) (y + 0.5));								// Rounding-up coords.
+		}
+	} else {
+		for (int32_t x = x_start; x >= x_end; x--) {
+			float y = (y_2 - y_1) * ((float) x - x_1) / (x_2 - x_1) + y_1;
+			return_val &= draw_dot(x, (int32_t) (y + 0.5));
+		}
+	}
+	return return_val;
 }
 
-
-/* 
- *  near_vertical
- *	 
- *	 
- *	
- *	
- * INPUTS: x_start,y_start -- the coordinates of the pixel at one end of the line
- * 	   x_end, y_end    -- the coordinates of the pixel at the other end
- * OUTPUTS: draws a pixel to all points in between the two given pixels including
- *          the end points
- * RETURN VALUE: 0 if any of the pixels drawn are out of bounds, otherwise 1
- * SIDE EFFECTS: none
- */
-
-int32_t
-near_vertical(int32_t x_start, int32_t y_start, int32_t x_end, int32_t y_end){
-	/* Your code goes here! */
-
-
-	return 0;
+int32_t near_vertical (int32_t x_start, int32_t y_start, int32_t x_end, int32_t y_end) {
+	float x_1 = (float) x_start;
+	float y_1 = (float) y_start;
+	float x_2 = (float) x_end;
+	float y_2 = (float) y_end;
+	uint8_t return_val = 1;
+	if (y_start == y_end) {
+		return_val &= draw_dot(x_start, y_start);										// The "single-dot" case
+		return return_val;
+	} else {
+		if (y_start < y_end) {
+			for (int32_t y = y_start; y <= y_end; y++) {
+				float x = (x_2 - x_1) * ((float) y - y_1) / (y_2 - y_1) + x_1;
+				return_val &= draw_dot((int32_t) (x + 0.5), y);
+			}
+		} else {
+			for (int32_t y = y_start; y >= y_end; y--) {
+				float x = (x_2 - x_1) * ((float) y - y_1) / (y_2 - y_1) + x_1;
+				return_val &= draw_dot((int32_t) (x + 0.5), y);
+			}
+		}
+	}
+	return return_val;
 }
 
-/* 
- *  draw_line
- *	 
- *	 
- *	
- *	
- * INPUTS: x_start,y_start -- the coordinates of the pixel at one end of the line
- * 	   x_end, y_end    -- the coordinates of the pixel at the other end
- * OUTPUTS: draws a pixel to all points in between the two given pixels including
- *          the end points
- * RETURN VALUE: 0 if any of the pixels drawn are out of bounds, otherwise 1
- * SIDE EFFECTS: none
- */
-
-int32_t
-draw_line(int32_t x_start, int32_t y_start, int32_t x_end, int32_t y_end){
-	/* Your code goes here! */
-
-
-	return 0;
+int32_t draw_line (int32_t x_start, int32_t y_start, int32_t x_end, int32_t y_end) {
+	float x_1 = (float) x_start;
+	float y_1 = (float) y_start;
+	float x_2 = (float) x_end;
+	float y_2 = (float) y_end;
+	uint8_t return_val = 1;
+	if (x_start == x_end) return_val = near_vertical(x_start, y_start, x_end, y_end);	// The "vertical" case
+	else {
+		float slope = (y_2 - y_1) / (x_2 - x_1);
+		if ((slope >= -1.0) && (slope <= 1.0)) return_val = near_horizontal(x_start, y_start, x_end, y_end);
+		else return_val = near_vertical(x_start, y_start, x_end, y_end);
+	}
+	return return_val;
 }
 
-
-/* 
- *  draw_rect
- *	 
- *	 
- *	
- *	
- * INPUTS: x,y -- the coordinates of the of the top-left pixel of the rectangle
- *         w,h -- the width and height, respectively, of the rectangle
- * OUTPUTS: draws a pixel to every point of the edges of the rectangle
- * RETURN VALUE: 0 if any of the pixels drawn are out of bounds, otherwise 1
- * SIDE EFFECTS: none
- */
-
-int32_t
-draw_rect(int32_t x, int32_t y, int32_t w, int32_t h){
-	/* Your code goes here! */
-
-
-	return 0;
+int32_t draw_rect (int32_t x, int32_t y, int32_t w, int32_t h) {
+	if ((w < 0) || (h < 0)) return 0;													// The "negative w/h" case
+	uint8_t return_val = 1;
+	return_val &= draw_line(x, y, x + w, y);
+	return_val &= draw_line(x, y, x, y + h);
+	return_val &= draw_line(x + w, y, x + w, y + h);
+	return_val &= draw_line(x, y + h, x + w, y + h);
+	return return_val;
 }
 
-
-/* 
- *  draw_triangle
- *	 
- *	 
- *	
- *	
- * INPUTS: x_A,y_A -- the coordinates of one of the vertices of the triangle
- *         x_B,y_B -- the coordinates of another of the vertices of the triangle
- *         x_C,y_C -- the coordinates of the final of the vertices of the triangle
- * OUTPUTS: draws a pixel to every point of the edges of the triangle
- * RETURN VALUE: 0 if any of the pixels drawn are out of bounds, otherwise 1
- * SIDE EFFECTS: none
- */
-
-int32_t
-draw_triangle(int32_t x_A, int32_t y_A, int32_t x_B, int32_t y_B, int32_t x_C, int32_t y_C){
-	/* Your code goes here! */
-
-
-	return 0;
+int32_t draw_triangle (int32_t x_A, int32_t y_A, int32_t x_B, int32_t y_B, int32_t x_C, int32_t y_C) {
+	uint8_t return_val = 1;
+	return_val &= draw_line(x_A, y_A, x_B, y_B);
+	return_val &= draw_line(x_A, y_A, x_C, y_C);
+	return_val &= draw_line(x_B, y_B, x_C, y_C);
+	return return_val;
 }
 
-/* 
- *  draw_parallelogram
- *	 
- *	 
- *	
- *	
- * INPUTS: x_A,y_A -- the coordinates of one of the vertices of the parallelogram
- *         x_B,y_B -- the coordinates of another of the vertices of the parallelogram
- *         x_C,y_C -- the coordinates of another of the vertices of the parallelogram
- * OUTPUTS: draws a pixel to every point of the edges of the parallelogram
- * RETURN VALUE: 0 if any of the pixels drawn are out of bounds, otherwise 1
- * SIDE EFFECTS: none
- */
-
-int32_t
-draw_parallelogram(int32_t x_A, int32_t y_A, int32_t x_B, int32_t y_B, int32_t x_C, int32_t y_C){
-	/* Your code goes here! */
-
-
-	return 0;
+int32_t draw_parallelogram (int32_t x_A, int32_t y_A, int32_t x_B, int32_t y_B, int32_t x_C, int32_t y_C) {
+	int32_t x_D = x_A - x_B + x_C, y_D = y_A - y_B + y_C;								// Point D's coord. inferred
+	uint8_t return_val = 1;
+	return_val &= draw_line(x_A, y_A, x_B, y_B);
+	return_val &= draw_line(x_B, y_B, x_C, y_C);
+	return_val &= draw_line(x_C, y_C, x_D, y_D);
+	return_val &= draw_line(x_D, y_D, x_A, y_A);
+	return return_val;
 }
 
-
-/* 
- *  draw_circle
- *	 
- *	 
- *	
- *	
- * INPUTS: x,y -- the center of the circle
- *         inner_r,outer_r -- the inner and outer radius of the circle
- * OUTPUTS: draws a pixel to every point whose distance from the center is
- * 	    greater than or equal to inner_r and less than or equal to outer_r
- * RETURN VALUE: 0 if any of the pixels drawn are out of bounds, otherwise 1
- * SIDE EFFECTS: none
- */
-
-int32_t
-draw_circle(int32_t x, int32_t y, int32_t inner_r, int32_t outer_r){
-	/* Your code goes here!*/
-
-
-	return 0;
+int32_t draw_circle (int32_t x, int32_t y, int32_t inner_r, int32_t outer_r) {
+	if ((inner_r < 0) || (outer_r < inner_r)) return 0;									// The "invalid radii" case
+	uint8_t return_val = 1;
+	for (int32_t x_coord = x - outer_r; x_coord <= x + outer_r; x_coord++) {
+		for (int32_t y_coord = y - outer_r; y_coord <= y + outer_r; y_coord++) {
+			int32_t radius_square = SQUARE(x_coord - x) + SQUARE(y_coord - y);
+			if ((radius_square >= SQUARE(inner_r)) && (radius_square <= SQUARE(outer_r))) return_val &= draw_dot(x_coord, y_coord);
+		}
+	}
+	return return_val;
 }
 
-
-/* 
- *  rect_gradient
- *	 
- *	 
- *	
- *	
- * INPUTS: x,y -- the coordinates of the of the top-left pixel of the rectangle
- *         w,h -- the width and height, respectively, of the rectangle
- *         start_color -- the color of the far left side of the rectangle
- *         end_color -- the color of the far right side of the rectangle
- * OUTPUTS: fills every pixel within the bounds of the rectangle with a color
- *	    based on its position within the rectangle and the difference in
- *          color between start_color and end_color
- * RETURN VALUE: 0 if any of the pixels drawn are out of bounds, otherwise 1
- * SIDE EFFECTS: none
- */
-
-int32_t
-rect_gradient(int32_t x, int32_t y, int32_t w, int32_t h, int32_t start_color, int32_t end_color){
-	/* Your code goes here! */
-
-
-	return 0;
+int32_t rect_gradient (int32_t x, int32_t y, int32_t w, int32_t h, int32_t start_color, int32_t end_color) {
+	if ((w < 1) || (h < 0)) return 0;
+	uint8_t start_R = (start_color & MASK_R) >> 16;										// Unpack color code
+	uint8_t start_G = (start_color & MASK_G) >> 8;
+	uint8_t start_B = (start_color & MASK_B);
+	uint8_t end_R = (end_color & MASK_R) >> 16;
+	uint8_t end_G = (end_color & MASK_G) >> 8;
+	uint8_t end_B = (end_color & MASK_B);
+	uint8_t return_val = 1;
+	for (int32_t x_coord = x; x_coord <= x + w; x_coord++) {
+		for (int32_t y_coord = y; y_coord <= y + h; y_coord++) {
+			uint8_t coord_R = (2 * (x_coord - x) * (end_R - start_R) + w * SGN(end_R - start_R)) / (2 * w) + start_R;
+			uint8_t coord_G = (2 * (x_coord - x) * (end_G - start_G) + w * SGN(end_G - start_G)) / (2 * w) + start_G;
+			uint8_t coord_B = (2 * (x_coord - x) * (end_B - start_B) + w * SGN(end_B - start_B)) / (2 * w) + start_B;
+			int32_t coord_color = (coord_R << 16) | (coord_G << 8) | (coord_B);			// Repack color code
+			set_color(coord_color);
+			return_val &= draw_dot(x_coord, y_coord);
+		}
+	}
+	return return_val;
 }
 
-
-/* 
- *  draw_picture
- *	 
- *	 
- *	
- *	
- * INPUTS: none
- * OUTPUTS: alters the image by calling any of the other functions in the file
- * RETURN VALUE: 0 if any of the pixels drawn are out of bounds, otherwise 1
- * SIDE EFFECTS: none
- */
-
-
-int32_t
-draw_picture(){
-	/* Your code goes here! */
-
+int32_t draw_picture () {													// 2,181 lines of code here......
+	
+	set_color(16736825);
+	draw_line(7, 84, 7, 88);
+	draw_line(8, 82, 8, 88);
+	draw_line(9, 82, 9, 89);
+	draw_line(10, 82, 10, 89);
+	draw_line(11, 81, 11, 90);
+	draw_line(11, 120, 11, 123);
+	draw_line(12, 81, 12, 90);
+	draw_line(12, 110, 12, 111);
+	draw_line(12, 119, 12, 126);
+	draw_line(13, 81, 13, 90);
+	draw_line(13, 108, 13, 112);
+	draw_line(13, 117, 13, 128);
+	draw_line(14, 80, 14, 89);
+	draw_line(14, 108, 14, 113);
+	draw_line(14, 116, 14, 129);
+	draw_line(15, 80, 15, 88);
+	draw_line(15, 108, 15, 129);
+	draw_line(16, 79, 16, 88);
+	draw_line(16, 108, 16, 130);
+	draw_line(17, 79, 17, 88);
+	draw_line(17, 108, 17, 131);
+	draw_line(18, 79, 18, 87);
+	draw_line(18, 106, 18, 136);
+	draw_line(19, 67, 19, 68);
+	draw_line(19, 78, 19, 87);
+	draw_line(19, 105, 19, 140);
+	draw_line(20, 67, 20, 71);
+	draw_line(20, 78, 20, 86);
+	draw_line(20, 103, 20, 143);
+	draw_line(21, 59, 21, 60);
+	draw_line(21, 67, 21, 71);
+	draw_line(21, 77, 21, 86);
+	draw_line(21, 98, 21, 146);
+	draw_line(21, 152, 21, 160);
+	draw_line(22, 59, 22, 71);
+	draw_line(22, 76, 22, 86);
+	draw_line(22, 89, 22, 161);
+	draw_line(23, 59, 23, 71);
+	draw_line(23, 75, 23, 162);
+	draw_line(24, 55, 24, 57);
+	draw_line(24, 59, 24, 70);
+	draw_line(24, 74, 24, 162);
+	draw_line(25, 53, 25, 67);
+	draw_line(25, 73, 25, 162);
+	draw_line(26, 52, 26, 68);
+	draw_line(26, 72, 26, 73);
+	draw_line(26, 75, 26, 162);
+	draw_line(27, 51, 27, 72);
+	draw_line(27, 75, 27, 161);
+	draw_line(28, 50, 28, 72);
+	draw_line(28, 74, 28, 164);
+	draw_dot(28, 173);
+	draw_line(29, 50, 29, 173);
+	draw_line(29, 202, 29, 203);
+	draw_line(30, 49, 30, 172);
+	draw_line(30, 200, 30, 204);
+	draw_line(31, 48, 31, 175);
+	draw_line(31, 199, 31, 205);
+	draw_line(32, 48, 32, 175);
+	draw_line(32, 198, 32, 205);
+	draw_line(33, 48, 33, 146);
+	draw_line(33, 148, 33, 178);
+	draw_line(33, 195, 33, 205);
+	draw_line(34, 47, 34, 144);
+	draw_line(34, 148, 34, 158);
+	draw_line(34, 160, 34, 183);
+	draw_line(34, 190, 34, 205);
+	draw_line(35, 47, 35, 143);
+	draw_line(35, 148, 35, 159);
+	draw_line(35, 161, 35, 204);
+	draw_line(36, 47, 36, 141);
+	draw_line(36, 148, 36, 157);
+	draw_line(36, 159, 36, 160);
+	draw_line(36, 162, 36, 204);
+	draw_line(37, 48, 37, 139);
+	draw_line(37, 148, 37, 157);
+	draw_line(37, 163, 37, 203);
+	draw_line(38, 50, 38, 98);
+	draw_line(38, 104, 38, 137);
+	draw_line(38, 147, 38, 155);
+	draw_line(38, 165, 38, 198);
+	draw_line(39, 50, 39, 97);
+	draw_line(39, 107, 39, 136);
+	draw_line(39, 147, 39, 153);
+	draw_line(39, 166, 39, 168);
+	draw_line(39, 186, 39, 198);
+	draw_line(40, 50, 40, 96);
+	draw_line(40, 108, 40, 134);
+	draw_line(40, 146, 40, 152);
+	draw_line(40, 191, 40, 197);
+	draw_line(41, 51, 41, 95);
+	draw_line(41, 109, 41, 131);
+	draw_line(41, 146, 41, 151);
+	draw_line(41, 194, 41, 196);
+	draw_line(42, 52, 42, 93);
+	draw_line(42, 109, 42, 129);
+	draw_line(42, 145, 42, 150);
+	draw_line(43, 52, 43, 92);
+	draw_line(43, 109, 43, 110);
+	draw_line(43, 112, 43, 129);
+	draw_line(43, 145, 43, 150);
+	draw_line(44, 53, 44, 94);
+	draw_line(44, 113, 44, 129);
+	draw_line(44, 144, 44, 149);
+	draw_line(45, 53, 45, 79);
+	draw_line(45, 81, 45, 96);
+	draw_line(45, 114, 45, 126);
+	draw_line(45, 142, 45, 148);
+	draw_line(46, 54, 46, 78);
+	draw_line(46, 80, 46, 99);
+	draw_line(46, 114, 46, 126);
+	draw_line(46, 142, 46, 149);
+	draw_line(47, 55, 47, 101);
+	draw_line(47, 114, 47, 125);
+	draw_line(47, 141, 47, 150);
+	draw_line(48, 56, 48, 80);
+	draw_line(48, 83, 48, 104);
+	draw_line(48, 115, 48, 125);
+	draw_line(48, 141, 48, 155);
+	draw_line(49, 57, 49, 79);
+	draw_line(49, 83, 49, 107);
+	draw_line(49, 115, 49, 122);
+	draw_line(49, 141, 49, 156);
+	draw_line(50, 59, 50, 78);
+	draw_line(50, 84, 50, 112);
+	draw_line(50, 116, 50, 121);
+	draw_line(50, 141, 50, 157);
+	draw_line(51, 68, 51, 75);
+	draw_line(51, 84, 51, 120);
+	draw_line(51, 142, 51, 157);
+	draw_line(52, 71, 52, 79);
+	draw_line(52, 84, 52, 86);
+	draw_line(52, 93, 52, 94);
+	draw_line(52, 97, 52, 119);
+	draw_line(52, 123, 52, 126);
+	draw_line(52, 149, 52, 156);
+	draw_dot(53, 72);
+	draw_line(53, 75, 53, 77);
+	draw_line(53, 84, 53, 87);
+	draw_line(53, 101, 53, 128);
+	draw_line(53, 150, 53, 155);
+	draw_line(54, 84, 54, 88);
+	draw_line(54, 104, 54, 129);
+	draw_line(55, 84, 55, 89);
+	draw_line(55, 107, 55, 130);
+	draw_line(56, 84, 56, 86);
+	draw_line(56, 108, 56, 129);
+	draw_line(57, 111, 57, 129);
+	draw_line(58, 114, 58, 129);
+	draw_line(59, 117, 59, 128);
+	draw_line(60, 120, 60, 130);
+	draw_line(61, 121, 61, 132);
+	draw_line(62, 124, 62, 133);
+	draw_line(63, 126, 63, 133);
+	draw_line(64, 127, 64, 131);
+	draw_line(64, 133, 64, 134);
+	draw_line(65, 127, 65, 131);
+	draw_line(65, 134, 65, 135);
+	draw_line(66, 127, 66, 131);
+	draw_line(67, 127, 67, 131);
+	draw_line(68, 127, 68, 132);
+	draw_line(69, 127, 69, 132);
+	draw_line(70, 129, 70, 132);
+	draw_line(71, 131, 71, 132);
+	draw_line(31, 241, 31, 274);
+	draw_line(32, 241, 32, 274);
+	draw_line(33, 241, 33, 274);
+	draw_line(34, 241, 34, 273);
+	draw_line(35, 242, 35, 264);
+	draw_line(35, 271, 35, 272);
+	draw_line(36, 261, 36, 264);
+	draw_line(37, 262, 37, 264);
+	draw_line(38, 262, 38, 264);
+	draw_line(39, 262, 39, 264);
+	draw_line(40, 262, 40, 264);
+	draw_line(41, 262, 41, 263);
+	draw_line(42, 261, 42, 262);
+	draw_line(43, 260, 43, 262);
+	draw_line(44, 258, 44, 261);
+	draw_line(45, 241, 45, 262);
+	draw_line(46, 241, 46, 264);
+	draw_line(47, 241, 47, 264);
+	draw_line(48, 241, 48, 264);
+	draw_line(49, 261, 49, 264);
+	draw_line(50, 262, 50, 264);
+	draw_line(51, 262, 51, 264);
+	draw_line(52, 262, 52, 264);
+	draw_line(53, 262, 53, 263);
+	set_color(14962687);
+	draw_dot(66, 101);
+	draw_dot(67, 95);
+	draw_line(67, 98, 67, 99);
+	draw_dot(67, 103);
+	draw_line(68, 92, 68, 96);
+	draw_line(68, 102, 68, 108);
+	draw_dot(69, 94);
+	draw_line(69, 98, 69, 111);
+	draw_line(70, 88, 70, 89);
+	draw_line(70, 92, 70, 93);
+	draw_line(70, 95, 70, 113);
+	draw_dot(71, 88);
+	draw_line(71, 91, 71, 107);
+	draw_line(71, 112, 71, 114);
+	draw_dot(72, 87);
+	draw_line(72, 90, 72, 102);
+	draw_line(72, 106, 72, 108);
+	draw_line(72, 114, 72, 115);
+	draw_line(73, 86, 73, 87);
+	draw_line(73, 89, 73, 100);
+	draw_line(73, 108, 73, 109);
+	draw_dot(73, 115);
+	draw_dot(74, 86);
+	draw_line(74, 88, 74, 99);
+	draw_dot(74, 109);
+	draw_dot(74, 115);
+	draw_line(74, 196, 74, 205);
+	draw_line(75, 85, 75, 98);
+	draw_dot(75, 109);
+	draw_line(75, 115, 75, 116);
+	draw_line(75, 183, 75, 206);
+	draw_line(76, 85, 76, 97);
+	draw_dot(76, 109);
+	draw_line(76, 115, 76, 116);
+	draw_line(76, 170, 76, 172);
+	draw_line(76, 175, 76, 207);
+	draw_line(77, 69, 77, 70);
+	draw_line(77, 85, 77, 96);
+	draw_line(77, 108, 77, 109);
+	draw_dot(77, 115);
+	draw_line(77, 168, 77, 207);
+	draw_line(78, 70, 78, 71);
+	draw_line(78, 84, 78, 95);
+	draw_line(78, 98, 78, 103);
+	draw_dot(78, 115);
+	draw_line(78, 168, 78, 207);
+	draw_line(79, 71, 79, 72);
+	draw_line(79, 84, 79, 104);
+	draw_dot(79, 114);
+	draw_line(79, 122, 79, 123);
+	draw_line(79, 125, 79, 130);
+	draw_line(79, 168, 79, 207);
+	draw_line(80, 68, 80, 69);
+	draw_line(80, 72, 80, 79);
+	draw_line(80, 83, 80, 105);
+	draw_line(80, 110, 80, 111);
+	draw_line(80, 121, 80, 131);
+	draw_line(80, 166, 80, 188);
+	draw_line(80, 190, 80, 191);
+	draw_line(80, 200, 80, 207);
+	draw_line(81, 69, 81, 71);
+	draw_line(81, 73, 81, 80);
+	draw_line(81, 83, 81, 105);
+	draw_dot(81, 111);
+	draw_line(81, 119, 81, 133);
+	draw_line(81, 166, 81, 185);
+	draw_line(82, 70, 82, 105);
+	draw_dot(82, 111);
+	draw_line(82, 118, 82, 134);
+	draw_line(82, 165, 82, 182);
+	draw_line(83, 72, 83, 104);
+	draw_dot(83, 111);
+	draw_line(83, 118, 83, 136);
+	draw_line(83, 163, 83, 179);
+	draw_line(84, 75, 84, 104);
+	draw_line(84, 118, 84, 178);
+	draw_line(85, 75, 85, 103);
+	draw_line(85, 116, 85, 177);
+	draw_line(86, 60, 86, 61);
+	draw_line(86, 76, 86, 101);
+	draw_line(86, 115, 86, 176);
+	draw_line(87, 58, 87, 64);
+	draw_line(87, 67, 87, 72);
+	draw_line(87, 77, 87, 78);
+	draw_line(87, 80, 87, 101);
+	draw_line(87, 115, 87, 175);
+	draw_line(88, 52, 88, 54);
+	draw_line(88, 57, 88, 73);
+	draw_line(88, 81, 88, 99);
+	draw_line(88, 115, 88, 168);
+	draw_line(89, 51, 89, 68);
+	draw_line(89, 76, 89, 77);
+	draw_line(89, 81, 89, 99);
+	draw_line(89, 115, 89, 166);
+	draw_line(90, 48, 90, 71);
+	draw_line(90, 75, 90, 78);
+	draw_line(90, 81, 90, 100);
+	draw_line(90, 113, 90, 165);
+	draw_line(91, 47, 91, 48);
+	draw_line(91, 52, 91, 104);
+	draw_line(91, 108, 91, 109);
+	draw_line(91, 111, 91, 162);
+	draw_line(92, 51, 92, 159);
+	draw_line(93, 50, 93, 53);
+	draw_line(93, 55, 93, 156);
+	draw_line(94, 49, 94, 51);
+	draw_line(94, 54, 94, 153);
+	draw_line(95, 48, 95, 49);
+	draw_line(95, 54, 95, 150);
+	draw_line(96, 53, 96, 146);
+	draw_line(97, 53, 97, 80);
+	draw_line(97, 82, 97, 143);
+	draw_line(98, 53, 98, 80);
+	draw_line(98, 82, 98, 139);
+	draw_line(99, 52, 99, 79);
+	draw_line(99, 82, 99, 138);
+	draw_line(99, 161, 99, 164);
+	draw_line(100, 52, 100, 138);
+	draw_line(100, 146, 100, 166);
+	draw_line(101, 52, 101, 167);
+	draw_line(102, 52, 102, 168);
+	draw_line(103, 52, 103, 168);
+	draw_line(104, 52, 104, 169);
+	draw_line(105, 53, 105, 171);
+	draw_line(106, 53, 106, 176);
+	draw_line(107, 53, 107, 177);
+	draw_line(108, 54, 108, 78);
+	draw_line(108, 81, 108, 159);
+	draw_line(108, 164, 108, 177);
+	draw_line(109, 55, 109, 79);
+	draw_line(109, 82, 109, 156);
+	draw_line(109, 165, 109, 176);
+	draw_line(110, 54, 110, 79);
+	draw_line(110, 81, 110, 154);
+	draw_line(110, 165, 110, 177);
+	draw_line(111, 54, 111, 79);
+	draw_line(111, 81, 111, 103);
+	draw_line(111, 105, 111, 152);
+	draw_line(111, 165, 111, 179);
+	draw_line(112, 54, 112, 78);
+	draw_line(112, 81, 112, 99);
+	draw_line(112, 111, 112, 149);
+	draw_line(112, 166, 112, 180);
+	draw_line(113, 55, 113, 79);
+	draw_line(113, 81, 113, 94);
+	draw_line(113, 113, 113, 147);
+	draw_line(113, 167, 113, 182);
+	draw_line(114, 56, 114, 62);
+	draw_line(114, 68, 114, 94);
+	draw_line(114, 115, 114, 144);
+	draw_line(114, 166, 114, 184);
+	draw_dot(115, 60);
+	draw_line(115, 72, 115, 96);
+	draw_line(115, 116, 115, 141);
+	draw_line(115, 167, 115, 185);
+	draw_line(116, 79, 116, 99);
+	draw_line(116, 116, 116, 138);
+	draw_line(116, 172, 116, 188);
+	draw_line(117, 76, 117, 101);
+	draw_line(117, 116, 117, 136);
+	draw_line(117, 174, 117, 192);
+	draw_line(117, 200, 117, 205);
+	draw_line(118, 76, 118, 103);
+	draw_line(118, 116, 118, 136);
+	draw_line(118, 176, 118, 206);
+	draw_line(119, 76, 119, 104);
+	draw_line(119, 115, 119, 135);
+	draw_line(119, 180, 119, 207);
+	draw_line(120, 73, 120, 104);
+	draw_dot(120, 116);
+	draw_line(120, 118, 120, 134);
+	draw_line(120, 183, 120, 207);
+	draw_line(121, 71, 121, 105);
+	draw_line(121, 119, 121, 131);
+	draw_line(121, 188, 121, 207);
+	draw_line(122, 69, 122, 72);
+	draw_line(122, 74, 122, 106);
+	draw_line(122, 119, 122, 130);
+	draw_line(122, 192, 122, 206);
+	draw_dot(123, 69);
+	draw_line(123, 72, 123, 78);
+	draw_line(123, 81, 123, 106);
+	draw_line(123, 119, 123, 128);
+	draw_line(123, 196, 123, 206);
+	draw_line(124, 71, 124, 73);
+	draw_line(124, 81, 124, 105);
+	draw_line(124, 119, 124, 126);
+	draw_line(124, 201, 124, 204);
+	draw_line(125, 71, 125, 72);
+	draw_dot(125, 81);
+	draw_line(125, 83, 125, 104);
+	draw_line(125, 120, 125, 121);
+	draw_line(126, 70, 126, 71);
+	draw_dot(126, 81);
+	draw_line(126, 83, 126, 96);
+	draw_line(126, 98, 126, 103);
+	draw_dot(127, 81);
+	draw_line(127, 84, 127, 97);
+	draw_line(127, 99, 127, 101);
+	draw_line(128, 84, 128, 97);
+	draw_line(129, 85, 129, 98);
+	draw_dot(129, 110);
+	draw_line(130, 85, 130, 99);
+	draw_line(130, 109, 130, 112);
+	draw_line(131, 85, 131, 88);
+	draw_line(131, 91, 131, 99);
+	draw_dot(131, 112);
+	draw_line(132, 86, 132, 89);
+	draw_line(132, 93, 132, 97);
+	draw_line(132, 99, 132, 100);
+	draw_dot(132, 112);
+	draw_line(133, 86, 133, 89);
+	draw_line(133, 94, 133, 98);
+	draw_dot(133, 100);
+	draw_dot(133, 112);
+	draw_line(134, 87, 134, 90);
+	draw_line(134, 95, 134, 98);
+	draw_dot(134, 100);
+	draw_dot(134, 112);
+	draw_line(135, 87, 135, 90);
+	draw_line(135, 95, 135, 98);
+	draw_dot(135, 101);
+	draw_line(135, 111, 135, 112);
+	draw_dot(136, 82);
+	draw_line(136, 88, 136, 90);
+	draw_line(136, 95, 136, 98);
+	draw_dot(136, 101);
+	draw_dot(136, 111);
+	draw_dot(137, 83);
+	draw_line(137, 89, 137, 91);
+	draw_line(137, 96, 137, 99);
+	draw_dot(137, 102);
+	draw_line(138, 83, 138, 84);
+	draw_line(138, 90, 138, 92);
+	draw_line(138, 96, 138, 99);
+	draw_dot(138, 102);
+	draw_line(139, 84, 139, 85);
+	draw_line(139, 91, 139, 92);
+	draw_dot(139, 96);
+	draw_line(139, 98, 139, 99);
+	draw_dot(139, 103);
+	draw_dot(139, 116);
+	draw_line(140, 85, 140, 86);
+	draw_line(140, 92, 140, 93);
+	draw_dot(140, 97);
+	draw_line(140, 99, 140, 100);
+	draw_dot(140, 104);
+	draw_line(140, 115, 140, 116);
+	draw_dot(141, 94);
+	draw_line(141, 99, 141, 100);
+	draw_line(141, 103, 141, 106);
+	draw_line(141, 114, 141, 115);
+	draw_line(142, 95, 142, 102);
+	draw_line(142, 107, 142, 109);
+	draw_line(142, 111, 142, 114);
+	draw_line(143, 100, 143, 102);
+	draw_line(143, 110, 143, 112);
+	draw_line(144, 100, 144, 101);
+	draw_line(144, 103, 144, 104);
+	draw_dot(145, 101);
+	draw_dot(82, 242);
+	draw_line(83, 232, 83, 233);
+	draw_line(83, 242, 83, 243);
+	draw_line(84, 231, 84, 235);
+	draw_line(84, 241, 84, 242);
+	draw_line(85, 230, 85, 235);
+	draw_line(85, 240, 85, 242);
+	draw_line(86, 230, 86, 236);
+	draw_line(86, 239, 86, 241);
+	draw_line(87, 230, 87, 240);
+	draw_line(88, 230, 88, 239);
+	draw_line(89, 231, 89, 238);
+	draw_line(90, 233, 90, 236);
+	draw_line(121, 246, 121, 251);
+	draw_line(121, 257, 121, 264);
+	draw_line(122, 245, 122, 252);
+	draw_line(122, 258, 122, 264);
+	draw_line(123, 244, 123, 253);
+	draw_line(123, 261, 123, 263);
+	draw_line(124, 243, 124, 253);
+	draw_line(124, 262, 124, 264);
+	draw_line(125, 243, 125, 244);
+	draw_line(125, 249, 125, 254);
+	draw_line(125, 263, 125, 264);
+	draw_line(126, 243, 126, 244);
+	draw_line(126, 250, 126, 255);
+	draw_line(126, 263, 126, 264);
+	draw_line(127, 243, 127, 244);
+	draw_line(127, 251, 127, 255);
+	draw_dot(127, 264);
+	draw_line(128, 243, 128, 244);
+	draw_line(128, 251, 128, 256);
+	draw_dot(128, 264);
+	draw_line(129, 243, 129, 244);
+	draw_line(129, 251, 129, 256);
+	draw_line(129, 263, 129, 264);
+	draw_line(130, 244, 130, 245);
+	draw_line(130, 252, 130, 258);
+	draw_line(130, 262, 130, 264);
+	draw_line(131, 243, 131, 247);
+	draw_line(131, 252, 131, 264);
+	draw_line(132, 243, 132, 249);
+	draw_line(132, 253, 132, 263);
+	draw_line(133, 254, 133, 262);
+	draw_line(134, 256, 134, 261);
+	set_color(16703829);
+	draw_dot(127, 66);
+	draw_line(127, 68, 127, 69);
+	draw_dot(128, 66);
+	draw_line(128, 68, 128, 69);
+	draw_line(129, 66, 129, 69);
+	draw_dot(129, 72);
+	draw_line(130, 66, 130, 69);
+	draw_dot(130, 71);
+	draw_line(131, 66, 131, 69);
+	draw_dot(131, 71);
+	draw_line(132, 67, 132, 71);
+	draw_line(133, 64, 133, 65);
+	draw_line(133, 67, 133, 70);
+	draw_line(134, 65, 134, 70);
+	draw_line(135, 66, 135, 71);
+	draw_line(136, 66, 136, 76);
+	draw_line(137, 67, 137, 76);
+	draw_line(138, 68, 138, 77);
+	draw_line(139, 69, 139, 77);
+	draw_line(140, 69, 140, 78);
+	draw_line(141, 70, 141, 78);
+	draw_line(142, 70, 142, 78);
+	draw_line(143, 71, 143, 79);
+	draw_line(144, 72, 144, 79);
+	draw_line(145, 73, 145, 80);
+	draw_line(146, 73, 146, 80);
+	draw_line(146, 127, 146, 128);
+	draw_line(147, 74, 147, 81);
+	draw_line(147, 124, 147, 128);
+	draw_line(148, 75, 148, 81);
+	draw_line(148, 123, 148, 130);
+	draw_line(149, 76, 149, 82);
+	draw_line(149, 122, 149, 132);
+	draw_line(150, 77, 150, 82);
+	draw_line(150, 121, 150, 131);
+	draw_line(150, 166, 150, 170);
+	draw_line(151, 77, 151, 83);
+	draw_line(151, 120, 151, 132);
+	draw_line(151, 166, 151, 171);
+	draw_line(152, 78, 152, 84);
+	draw_line(152, 112, 152, 113);
+	draw_line(152, 119, 152, 135);
+	draw_line(152, 165, 152, 178);
+	draw_line(152, 188, 152, 192);
+	draw_line(152, 196, 152, 197);
+	draw_line(153, 78, 153, 85);
+	draw_line(153, 109, 153, 112);
+	draw_dot(153, 114);
+	draw_line(153, 117, 153, 140);
+	draw_line(153, 164, 153, 199);
+	draw_line(154, 79, 154, 86);
+	draw_line(154, 110, 154, 114);
+	draw_line(154, 116, 154, 143);
+	draw_line(154, 163, 154, 199);
+	draw_line(155, 80, 155, 87);
+	draw_line(155, 110, 155, 146);
+	draw_line(155, 161, 155, 199);
+	draw_line(156, 81, 156, 88);
+	draw_line(156, 111, 156, 150);
+	draw_line(156, 160, 156, 199);
+	draw_line(157, 82, 157, 89);
+	draw_line(157, 111, 157, 199);
+	draw_line(158, 82, 158, 90);
+	draw_line(158, 101, 158, 102);
+	draw_line(158, 110, 158, 174);
+	draw_line(158, 195, 158, 199);
+	draw_line(159, 75, 159, 76);
+	draw_line(159, 83, 159, 91);
+	draw_line(159, 100, 159, 172);
+	draw_line(159, 174, 159, 175);
+	draw_line(159, 197, 159, 198);
+	draw_line(160, 72, 160, 79);
+	draw_line(160, 84, 160, 92);
+	draw_line(160, 97, 160, 171);
+	draw_dot(161, 69);
+	draw_line(161, 71, 161, 81);
+	draw_line(161, 85, 161, 162);
+	draw_line(162, 68, 162, 83);
+	draw_line(162, 86, 162, 160);
+	draw_line(163, 67, 163, 83);
+	draw_line(163, 86, 163, 133);
+	draw_line(163, 143, 163, 159);
+	draw_line(164, 66, 164, 84);
+	draw_line(164, 86, 164, 133);
+	draw_line(165, 65, 165, 83);
+	draw_line(165, 85, 165, 133);
+	draw_dot(166, 63);
+	draw_line(166, 65, 166, 85);
+	draw_line(166, 87, 166, 133);
+	draw_line(167, 64, 167, 85);
+	draw_line(167, 87, 167, 134);
+	draw_line(168, 64, 168, 85);
+	draw_line(168, 87, 168, 137);
+	draw_line(169, 64, 169, 85);
+	draw_line(169, 88, 169, 139);
+	draw_line(170, 64, 170, 86);
+	draw_line(170, 88, 170, 141);
+	draw_line(171, 64, 171, 143);
+	draw_line(172, 64, 172, 145);
+	draw_line(173, 64, 173, 146);
+	draw_line(174, 64, 174, 107);
+	draw_line(174, 113, 174, 148);
+	draw_line(175, 64, 175, 106);
+	draw_line(175, 112, 175, 150);
+	draw_line(176, 63, 176, 107);
+	draw_line(176, 111, 176, 114);
+	draw_line(176, 116, 176, 151);
+	draw_line(177, 62, 177, 107);
+	draw_line(177, 111, 177, 114);
+	draw_line(177, 116, 177, 153);
+	draw_line(178, 63, 178, 85);
+	draw_line(178, 89, 178, 102);
+	draw_line(178, 104, 178, 106);
+	draw_line(178, 111, 178, 112);
+	draw_line(178, 117, 178, 155);
+	draw_line(179, 63, 179, 85);
+	draw_line(179, 88, 179, 99);
+	draw_line(179, 117, 179, 131);
+	draw_line(179, 134, 179, 156);
+	draw_line(180, 62, 180, 84);
+	draw_line(180, 88, 180, 97);
+	draw_line(180, 117, 180, 129);
+	draw_line(180, 138, 180, 157);
+	draw_line(181, 61, 181, 84);
+	draw_line(181, 88, 181, 96);
+	draw_line(181, 117, 181, 128);
+	draw_line(181, 143, 181, 158);
+	draw_line(182, 61, 182, 83);
+	draw_line(182, 88, 182, 96);
+	draw_line(182, 118, 182, 129);
+	draw_line(182, 147, 182, 160);
+	draw_dot(182, 164);
+	draw_line(183, 61, 183, 81);
+	draw_line(183, 88, 183, 95);
+	draw_line(183, 119, 183, 125);
+	draw_line(183, 151, 183, 166);
+	draw_line(184, 62, 184, 78);
+	draw_line(184, 88, 184, 95);
+	draw_line(184, 121, 184, 123);
+	draw_line(184, 153, 184, 166);
+	draw_line(185, 63, 185, 76);
+	draw_line(185, 88, 185, 95);
+	draw_line(185, 154, 185, 167);
+	draw_line(186, 64, 186, 80);
+	draw_line(186, 88, 186, 95);
+	draw_line(186, 155, 186, 170);
+	draw_line(187, 66, 187, 80);
+	draw_line(187, 88, 187, 94);
+	draw_line(187, 156, 187, 168);
+	draw_line(188, 68, 188, 69);
+	draw_line(188, 71, 188, 80);
+	draw_line(188, 87, 188, 94);
+	draw_line(188, 157, 188, 169);
+	draw_line(189, 75, 189, 79);
+	draw_line(189, 87, 189, 94);
+	draw_line(189, 158, 189, 171);
+	draw_line(190, 76, 190, 77);
+	draw_line(190, 87, 190, 93);
+	draw_line(190, 158, 190, 173);
+	draw_line(191, 87, 191, 93);
+	draw_line(191, 159, 191, 178);
+	draw_line(192, 87, 192, 93);
+	draw_line(192, 160, 192, 188);
+	draw_line(193, 86, 193, 93);
+	draw_line(193, 166, 193, 189);
+	draw_line(194, 86, 194, 93);
+	draw_dot(194, 167);
+	draw_line(194, 173, 194, 190);
+	draw_line(195, 85, 195, 93);
+	draw_line(195, 177, 195, 190);
+	draw_line(196, 85, 196, 92);
+	draw_line(196, 179, 196, 189);
+	draw_line(197, 85, 197, 92);
+	draw_line(197, 184, 197, 188);
+	draw_line(198, 85, 198, 92);
+	draw_line(199, 85, 199, 92);
+	draw_line(200, 84, 200, 92);
+	draw_line(201, 84, 201, 92);
+	draw_line(202, 84, 202, 92);
+	draw_line(203, 84, 203, 92);
+	draw_line(204, 83, 204, 92);
+	draw_line(205, 83, 205, 92);
+	draw_line(206, 83, 206, 92);
+	draw_line(207, 83, 207, 91);
+	draw_line(208, 83, 208, 91);
+	draw_line(209, 84, 209, 93);
+	draw_line(210, 84, 210, 90);
+	draw_line(210, 93, 210, 95);
+	draw_line(211, 84, 211, 91);
+	draw_line(212, 84, 212, 85);
+	draw_line(212, 87, 212, 89);
+	draw_line(212, 92, 212, 93);
+	draw_line(213, 84, 213, 85);
+	draw_dot(213, 87);
+	draw_line(213, 89, 213, 90);
+	draw_line(213, 93, 213, 94);
+	draw_dot(214, 85);
+	draw_dot(214, 87);
+	draw_dot(214, 90);
+	draw_line(215, 87, 215, 88);
+	draw_line(215, 90, 215, 91);
+	draw_dot(216, 88);
+	draw_line(216, 91, 216, 92);
+	draw_dot(217, 88);
+	draw_dot(164, 244);
+	draw_line(164, 263, 164, 264);
+	draw_dot(165, 244);
+	draw_line(165, 263, 165, 264);
+	draw_line(166, 231, 166, 233);
+	draw_line(166, 243, 166, 245);
+	draw_line(166, 263, 166, 264);
+	draw_line(167, 230, 167, 234);
+	draw_line(167, 243, 167, 264);
+	draw_line(168, 230, 168, 234);
+	draw_line(168, 243, 168, 264);
+	draw_line(169, 230, 169, 234);
+	draw_line(169, 243, 169, 264);
+	draw_line(170, 230, 170, 234);
+	draw_line(170, 243, 170, 264);
+	draw_line(171, 231, 171, 233);
+	draw_line(171, 243, 171, 264);
+	draw_line(172, 263, 172, 264);
+	draw_line(173, 263, 173, 264);
+	draw_line(174, 263, 174, 264);
+	draw_line(202, 252, 202, 256);
+	draw_line(203, 249, 203, 259);
+	draw_line(204, 248, 204, 261);
+	draw_line(205, 247, 205, 262);
+	draw_line(206, 245, 206, 262);
+	draw_line(207, 245, 207, 263);
+	draw_line(208, 244, 208, 248);
+	draw_line(208, 259, 208, 264);
+	draw_line(209, 244, 209, 246);
+	draw_line(209, 260, 209, 264);
+	draw_line(210, 243, 210, 245);
+	draw_line(210, 261, 210, 264);
+	draw_line(211, 243, 211, 244);
+	draw_line(211, 262, 211, 264);
+	set_color(48127);
+	draw_dot(198, 123);
+	draw_line(199, 123, 199, 124);
+	draw_dot(200, 123);
+	draw_line(201, 122, 201, 123);
+	draw_line(202, 122, 202, 124);
+	draw_line(203, 122, 203, 123);
+	draw_line(204, 121, 204, 125);
+	draw_line(205, 121, 205, 125);
+	draw_line(206, 120, 206, 125);
+	draw_line(207, 120, 207, 124);
+	draw_line(208, 119, 208, 124);
+	draw_line(209, 115, 209, 116);
+	draw_line(209, 119, 209, 124);
+	draw_line(210, 113, 210, 123);
+	draw_line(211, 64, 211, 67);
+	draw_line(211, 112, 211, 122);
+	draw_line(212, 62, 212, 65);
+	draw_dot(212, 68);
+	draw_line(212, 111, 212, 120);
+	draw_line(213, 61, 213, 62);
+	draw_line(213, 111, 213, 119);
+	draw_line(214, 60, 214, 62);
+	draw_line(214, 110, 214, 120);
+	draw_line(215, 59, 215, 61);
+	draw_dot(215, 69);
+	draw_line(215, 109, 215, 121);
+	draw_line(216, 59, 216, 61);
+	draw_dot(216, 63);
+	draw_line(216, 66, 216, 69);
+	draw_line(216, 107, 216, 121);
+	draw_line(217, 58, 217, 62);
+	draw_line(217, 64, 217, 72);
+	draw_line(217, 106, 217, 119);
+	draw_line(218, 58, 218, 69);
+	draw_line(218, 104, 218, 118);
+	draw_line(219, 58, 219, 71);
+	draw_line(219, 103, 219, 114);
+	draw_line(220, 58, 220, 67);
+	draw_line(220, 71, 220, 73);
+	draw_line(220, 102, 220, 113);
+	draw_line(220, 123, 220, 128);
+	draw_dot(221, 55);
+	draw_line(221, 58, 221, 65);
+	draw_dot(221, 73);
+	draw_line(221, 100, 221, 111);
+	draw_line(221, 121, 221, 131);
+	draw_line(222, 55, 222, 63);
+	draw_dot(222, 74);
+	draw_line(222, 99, 222, 110);
+	draw_line(222, 120, 222, 131);
+	draw_line(222, 134, 222, 135);
+	draw_line(222, 172, 222, 174);
+	draw_line(223, 55, 223, 62);
+	draw_line(223, 74, 223, 76);
+	draw_line(223, 97, 223, 108);
+	draw_line(223, 118, 223, 141);
+	draw_line(223, 169, 223, 175);
+	draw_line(224, 51, 224, 61);
+	draw_dot(224, 74);
+	draw_line(224, 96, 224, 107);
+	draw_line(224, 116, 224, 146);
+	draw_line(224, 167, 224, 176);
+	draw_line(225, 49, 225, 61);
+	draw_dot(225, 74);
+	draw_line(225, 93, 225, 106);
+	draw_line(225, 114, 225, 151);
+	draw_line(225, 163, 225, 180);
+	draw_line(226, 48, 226, 68);
+	draw_line(226, 71, 226, 73);
+	draw_dot(226, 77);
+	draw_line(226, 90, 226, 104);
+	draw_line(226, 113, 226, 183);
+	draw_line(227, 47, 227, 62);
+	draw_line(227, 70, 227, 76);
+	draw_line(227, 88, 227, 102);
+	draw_line(227, 112, 227, 185);
+	draw_line(228, 46, 228, 61);
+	draw_line(228, 72, 228, 75);
+	draw_line(228, 84, 228, 101);
+	draw_line(228, 105, 228, 107);
+	draw_line(228, 111, 228, 188);
+	draw_line(228, 200, 228, 203);
+	draw_line(229, 46, 229, 61);
+	draw_line(229, 83, 229, 99);
+	draw_line(229, 104, 229, 107);
+	draw_line(229, 110, 229, 205);
+	draw_line(230, 45, 230, 64);
+	draw_line(230, 80, 230, 97);
+	draw_line(230, 104, 230, 107);
+	draw_line(230, 109, 230, 206);
+	draw_line(231, 45, 231, 66);
+	draw_line(231, 78, 231, 95);
+	draw_line(231, 104, 231, 106);
+	draw_line(231, 108, 231, 206);
+	draw_line(232, 45, 232, 68);
+	draw_line(232, 76, 232, 93);
+	draw_line(232, 104, 232, 161);
+	draw_line(232, 169, 232, 174);
+	draw_line(232, 186, 232, 207);
+	draw_line(233, 45, 233, 73);
+	draw_line(233, 75, 233, 92);
+	draw_line(233, 105, 233, 156);
+	draw_dot(233, 173);
+	draw_line(233, 192, 233, 206);
+	draw_line(234, 45, 234, 90);
+	draw_line(234, 100, 234, 102);
+	draw_line(234, 105, 234, 147);
+	draw_line(234, 197, 234, 206);
+	draw_line(235, 45, 235, 89);
+	draw_line(235, 98, 235, 102);
+	draw_line(235, 105, 235, 139);
+	draw_line(235, 201, 235, 205);
+	draw_line(236, 47, 236, 92);
+	draw_line(236, 96, 236, 103);
+	draw_line(236, 105, 236, 131);
+	draw_dot(236, 138);
+	draw_line(237, 46, 237, 72);
+	draw_line(237, 75, 237, 131);
+	draw_line(238, 45, 238, 131);
+	draw_line(239, 45, 239, 131);
+	draw_line(240, 45, 240, 131);
+	draw_line(241, 45, 241, 134);
+	draw_line(242, 45, 242, 138);
+	draw_line(243, 45, 243, 142);
+	draw_line(244, 45, 244, 145);
+	draw_line(245, 46, 245, 147);
+	draw_line(246, 49, 246, 74);
+	draw_line(246, 76, 246, 150);
+	draw_line(247, 49, 247, 73);
+	draw_line(247, 77, 247, 152);
+	draw_line(248, 50, 248, 73);
+	draw_line(248, 76, 248, 155);
+	draw_line(249, 51, 249, 74);
+	draw_line(249, 76, 249, 158);
+	draw_line(250, 46, 250, 159);
+	draw_line(251, 46, 251, 66);
+	draw_line(251, 74, 251, 161);
+	draw_line(252, 49, 252, 64);
+	draw_line(252, 66, 252, 67);
+	draw_line(252, 75, 252, 112);
+	draw_line(252, 114, 252, 162);
+	draw_line(253, 50, 253, 62);
+	draw_line(253, 67, 253, 68);
+	draw_line(253, 75, 253, 107);
+	draw_line(253, 109, 253, 112);
+	draw_line(253, 115, 253, 164);
+	draw_dot(253, 171);
+	draw_line(253, 174, 253, 175);
+	draw_line(254, 51, 254, 62);
+	draw_line(254, 75, 254, 107);
+	draw_line(254, 109, 254, 113);
+	draw_line(254, 115, 254, 174);
+	draw_line(255, 51, 255, 63);
+	draw_line(255, 75, 255, 105);
+	draw_line(255, 108, 255, 113);
+	draw_line(255, 116, 255, 133);
+	draw_line(255, 139, 255, 173);
+	draw_line(256, 53, 256, 63);
+	draw_line(256, 74, 256, 101);
+	draw_dot(256, 108);
+	draw_line(256, 110, 256, 113);
+	draw_line(256, 116, 256, 133);
+	draw_line(256, 156, 256, 173);
+	draw_dot(256, 176);
+	draw_line(257, 55, 257, 64);
+	draw_line(257, 74, 257, 83);
+	draw_line(257, 85, 257, 101);
+	draw_line(257, 110, 257, 111);
+	draw_line(257, 116, 257, 132);
+	draw_line(257, 158, 257, 176);
+	draw_line(258, 55, 258, 65);
+	draw_line(258, 73, 258, 82);
+	draw_line(258, 88, 258, 90);
+	draw_line(258, 97, 258, 101);
+	draw_line(258, 116, 258, 131);
+	draw_line(258, 160, 258, 178);
+	draw_dot(258, 201);
+	draw_line(259, 56, 259, 65);
+	draw_line(259, 72, 259, 81);
+	draw_line(259, 120, 259, 130);
+	draw_line(259, 162, 259, 181);
+	draw_line(259, 198, 259, 203);
+	draw_line(260, 57, 260, 65);
+	draw_line(260, 71, 260, 81);
+	draw_line(260, 120, 260, 122);
+	draw_line(260, 127, 260, 129);
+	draw_line(260, 163, 260, 186);
+	draw_line(260, 189, 260, 190);
+	draw_line(260, 194, 260, 204);
+	draw_line(261, 58, 261, 66);
+	draw_line(261, 70, 261, 80);
+	draw_line(261, 164, 261, 204);
+	draw_line(262, 59, 262, 79);
+	draw_line(262, 166, 262, 204);
+	draw_line(263, 60, 263, 78);
+	draw_line(263, 167, 263, 204);
+	draw_line(264, 61, 264, 77);
+	draw_line(264, 175, 264, 203);
+	draw_line(265, 62, 265, 76);
+	draw_line(265, 196, 265, 202);
+	draw_line(266, 63, 266, 75);
+	draw_line(267, 64, 267, 74);
+	draw_line(268, 65, 268, 73);
+	draw_line(269, 66, 269, 72);
+	draw_line(270, 67, 270, 71);
+	draw_line(271, 68, 271, 70);
+	draw_line(212, 243, 212, 244);
+	draw_line(212, 263, 212, 264);
+	draw_dot(213, 243);
+	draw_line(213, 263, 213, 264);
+	draw_line(214, 243, 214, 244);
+	draw_line(214, 263, 214, 264);
+	draw_line(215, 243, 215, 244);
+	draw_line(215, 263, 215, 264);
+	draw_line(216, 243, 216, 247);
+	draw_line(216, 263, 216, 264);
+	draw_line(217, 243, 217, 248);
+	draw_line(217, 263, 217, 264);
+	draw_line(218, 244, 218, 248);
+	draw_line(218, 262, 218, 263);
+	draw_line(219, 244, 219, 248);
+	draw_line(219, 260, 219, 262);
+	draw_line(220, 245, 220, 248);
+	draw_line(220, 259, 220, 260);
+	set_color(16756224);
+	draw_line(273, 90, 273, 93);
+	draw_line(274, 89, 274, 94);
+	draw_line(275, 88, 275, 94);
+	draw_line(276, 88, 276, 94);
+	draw_line(277, 89, 277, 94);
+	draw_line(278, 89, 278, 93);
+	draw_line(279, 89, 279, 96);
+	draw_line(280, 89, 280, 97);
+	draw_line(281, 62, 281, 65);
+	draw_line(281, 89, 281, 98);
+	draw_line(282, 61, 282, 62);
+	draw_line(282, 65, 282, 66);
+	draw_line(282, 90, 282, 98);
+	draw_line(283, 60, 283, 61);
+	draw_dot(283, 66);
+	draw_line(283, 90, 283, 99);
+	draw_line(284, 60, 284, 61);
+	draw_line(284, 63, 284, 65);
+	draw_dot(284, 67);
+	draw_line(284, 90, 284, 99);
+	draw_line(285, 57, 285, 68);
+	draw_line(285, 91, 285, 99);
+	draw_line(285, 123, 285, 124);
+	draw_line(286, 57, 286, 69);
+	draw_line(286, 92, 286, 100);
+	draw_line(286, 120, 286, 126);
+	draw_line(287, 59, 287, 65);
+	draw_dot(287, 68);
+	draw_line(287, 92, 287, 100);
+	draw_line(287, 118, 287, 126);
+	draw_line(288, 59, 288, 64);
+	draw_line(288, 93, 288, 101);
+	draw_line(288, 116, 288, 125);
+	draw_dot(289, 56);
+	draw_line(289, 59, 289, 63);
+	draw_line(289, 94, 289, 101);
+	draw_line(289, 116, 289, 125);
+	draw_dot(290, 56);
+	draw_line(290, 58, 290, 62);
+	draw_line(290, 94, 290, 101);
+	draw_line(290, 117, 290, 125);
+	draw_dot(291, 45);
+	draw_line(291, 53, 291, 54);
+	draw_line(291, 56, 291, 61);
+	draw_line(291, 95, 291, 102);
+	draw_line(291, 117, 291, 126);
+	draw_line(291, 138, 291, 141);
+	draw_dot(292, 45);
+	draw_line(292, 52, 292, 61);
+	draw_line(292, 94, 292, 103);
+	draw_line(292, 109, 292, 111);
+	draw_line(292, 117, 292, 127);
+	draw_line(292, 130, 292, 131);
+	draw_line(292, 135, 292, 143);
+	draw_line(293, 44, 293, 45);
+	draw_line(293, 52, 293, 61);
+	draw_line(293, 69, 293, 71);
+	draw_line(293, 93, 293, 103);
+	draw_line(293, 108, 293, 110);
+	draw_line(293, 116, 293, 144);
+	draw_line(294, 44, 294, 45);
+	draw_dot(294, 48);
+	draw_line(294, 52, 294, 61);
+	draw_line(294, 69, 294, 70);
+	draw_line(294, 72, 294, 74);
+	draw_line(294, 92, 294, 103);
+	draw_line(294, 106, 294, 109);
+	draw_line(294, 114, 294, 144);
+	draw_line(295, 43, 295, 45);
+	draw_line(295, 47, 295, 48);
+	draw_line(295, 53, 295, 61);
+	draw_dot(295, 66);
+	draw_line(295, 68, 295, 75);
+	draw_line(295, 91, 295, 103);
+	draw_line(295, 106, 295, 109);
+	draw_line(295, 113, 295, 144);
+	draw_line(296, 43, 296, 48);
+	draw_line(296, 53, 296, 61);
+	draw_line(296, 65, 296, 66);
+	draw_line(296, 68, 296, 76);
+	draw_line(296, 88, 296, 102);
+	draw_line(296, 107, 296, 143);
+	draw_line(297, 43, 297, 48);
+	draw_line(297, 52, 297, 61);
+	draw_dot(297, 65);
+	draw_line(297, 67, 297, 73);
+	draw_line(297, 85, 297, 101);
+	draw_line(297, 103, 297, 140);
+	draw_line(298, 43, 298, 48);
+	draw_line(298, 51, 298, 60);
+	draw_dot(298, 62);
+	draw_line(298, 65, 298, 73);
+	draw_dot(298, 75);
+	draw_line(298, 84, 298, 141);
+	draw_line(299, 44, 299, 49);
+	draw_line(299, 51, 299, 62);
+	draw_line(299, 64, 299, 72);
+	draw_line(299, 83, 299, 141);
+	draw_line(300, 44, 300, 71);
+	draw_line(300, 74, 300, 77);
+	draw_line(300, 82, 300, 142);
+	draw_line(300, 203, 300, 206);
+	draw_line(301, 46, 301, 76);
+	draw_line(301, 80, 301, 143);
+	draw_line(301, 200, 301, 207);
+	draw_line(302, 46, 302, 75);
+	draw_line(302, 79, 302, 144);
+	draw_line(302, 198, 302, 208);
+	draw_line(303, 48, 303, 145);
+	draw_line(303, 196, 303, 208);
+	draw_line(304, 48, 304, 146);
+	draw_line(304, 168, 304, 169);
+	draw_line(304, 191, 304, 208);
+	draw_line(305, 48, 305, 75);
+	draw_line(305, 78, 305, 146);
+	draw_line(305, 167, 305, 172);
+	draw_line(305, 186, 305, 208);
+	draw_line(306, 50, 306, 73);
+	draw_line(306, 77, 306, 146);
+	draw_line(306, 165, 306, 207);
+	draw_line(307, 50, 307, 146);
+	draw_line(307, 163, 307, 205);
+	draw_line(308, 49, 308, 201);
+	draw_line(309, 49, 309, 190);
+	draw_line(310, 49, 310, 186);
+	draw_line(311, 48, 311, 183);
+	draw_line(312, 48, 312, 180);
+	draw_line(313, 48, 313, 177);
+	draw_line(314, 49, 314, 175);
+	draw_line(315, 49, 315, 100);
+	draw_line(315, 104, 315, 153);
+	draw_line(315, 164, 315, 172);
+	draw_line(316, 50, 316, 100);
+	draw_line(316, 104, 316, 151);
+	draw_line(316, 168, 316, 171);
+	draw_line(317, 50, 317, 100);
+	draw_line(317, 104, 317, 148);
+	draw_dot(317, 169);
+	draw_line(318, 50, 318, 100);
+	draw_line(318, 103, 318, 145);
+	draw_line(319, 51, 319, 74);
+	draw_line(319, 76, 319, 90);
+	draw_line(319, 92, 319, 99);
+	draw_line(319, 103, 319, 105);
+	draw_line(319, 107, 319, 143);
+	draw_line(320, 52, 320, 73);
+	draw_line(320, 76, 320, 89);
+	draw_line(320, 96, 320, 99);
+	draw_line(320, 102, 320, 105);
+	draw_line(320, 108, 320, 140);
+	draw_line(321, 53, 321, 88);
+	draw_line(321, 108, 321, 137);
+	draw_line(322, 55, 322, 90);
+	draw_line(322, 108, 322, 133);
+	draw_line(323, 57, 323, 69);
+	draw_line(323, 71, 323, 91);
+	draw_line(323, 108, 323, 130);
+	draw_line(324, 67, 324, 70);
+	draw_line(324, 77, 324, 91);
+	draw_line(324, 107, 324, 128);
+	draw_line(325, 69, 325, 70);
+	draw_line(325, 78, 325, 92);
+	draw_line(325, 107, 325, 127);
+	draw_dot(326, 71);
+	draw_line(326, 74, 326, 75);
+	draw_line(326, 81, 326, 94);
+	draw_line(326, 107, 326, 127);
+	draw_line(327, 72, 327, 74);
+	draw_line(327, 82, 327, 96);
+	draw_line(327, 106, 327, 125);
+	draw_line(328, 85, 328, 97);
+	draw_line(328, 106, 328, 123);
+	draw_line(329, 86, 329, 98);
+	draw_line(329, 106, 329, 122);
+	draw_line(330, 88, 330, 98);
+	draw_line(330, 109, 330, 122);
+	draw_line(331, 87, 331, 99);
+	draw_line(331, 109, 331, 123);
+	draw_line(332, 85, 332, 99);
+	draw_line(332, 109, 332, 121);
+	draw_line(333, 83, 333, 98);
+	draw_line(333, 109, 333, 110);
+	draw_line(333, 116, 333, 119);
+	draw_line(334, 81, 334, 97);
+	draw_line(334, 116, 334, 117);
+	draw_line(335, 79, 335, 94);
+	draw_line(336, 77, 336, 92);
+	draw_line(337, 75, 337, 91);
+	draw_line(338, 74, 338, 89);
+	draw_line(339, 73, 339, 87);
+	draw_line(340, 72, 340, 86);
+	draw_line(341, 71, 341, 84);
+	draw_line(342, 69, 342, 78);
+	draw_line(342, 81, 342, 82);
+	draw_line(343, 70, 343, 77);
+	draw_line(344, 70, 344, 76);
+	draw_line(345, 70, 345, 76);
+	draw_line(346, 73, 346, 75);
+	draw_line(300, 243, 300, 244);
+	draw_line(300, 263, 300, 264);
+	draw_line(301, 243, 301, 244);
+	draw_line(301, 263, 301, 264);
+	draw_line(302, 243, 302, 244);
+	draw_line(302, 262, 302, 264);
+	draw_line(303, 236, 303, 264);
+	draw_line(304, 233, 304, 264);
+	draw_line(305, 232, 305, 264);
+	draw_line(306, 231, 306, 264);
+	draw_line(307, 231, 307, 264);
+	draw_line(308, 230, 308, 233);
+	draw_line(308, 243, 308, 244);
+	draw_line(308, 261, 308, 264);
+	draw_line(309, 230, 309, 231);
+	draw_line(309, 243, 309, 244);
+	draw_line(309, 263, 309, 264);
+	draw_line(310, 230, 310, 231);
+	draw_line(310, 243, 310, 244);
+	draw_line(310, 263, 310, 264);
+	draw_line(311, 230, 311, 231);
+	draw_line(311, 243, 311, 244);
+	draw_line(311, 263, 311, 264);
+	draw_line(312, 229, 312, 231);
+	draw_line(312, 243, 312, 244);
+	draw_line(313, 229, 313, 232);
+	draw_line(314, 229, 314, 233);
+	draw_line(315, 230, 315, 234);
+	draw_line(316, 230, 316, 234);
+	draw_line(317, 231, 317, 233);
+	draw_line(341, 251, 341, 257);
+	draw_line(342, 249, 342, 259);
+	draw_line(343, 248, 343, 260);
+	draw_line(344, 247, 344, 261);
+	draw_line(345, 246, 345, 262);
+	draw_line(346, 245, 346, 251);
+	draw_line(346, 256, 346, 263);
+	set_color(11053224);
+	draw_line(344, 111, 344, 112);
+	draw_line(345, 108, 345, 113);
+	draw_line(346, 108, 346, 114);
+	draw_line(347, 109, 347, 116);
+	draw_line(348, 71, 348, 72);
+	draw_line(348, 110, 348, 117);
+	draw_line(349, 66, 349, 68);
+	draw_line(349, 70, 349, 75);
+	draw_line(349, 81, 349, 85);
+	draw_line(349, 111, 349, 118);
+	draw_line(350, 65, 350, 67);
+	draw_line(350, 69, 350, 75);
+	draw_line(350, 80, 350, 83);
+	draw_line(350, 111, 350, 119);
+	draw_line(351, 65, 351, 66);
+	draw_line(351, 69, 351, 72);
+	draw_line(351, 79, 351, 80);
+	draw_line(351, 110, 351, 119);
+	draw_line(352, 64, 352, 66);
+	draw_line(352, 69, 352, 71);
+	draw_line(352, 78, 352, 79);
+	draw_line(352, 110, 352, 119);
+	draw_line(353, 64, 353, 66);
+	draw_line(353, 69, 353, 70);
+	draw_dot(353, 78);
+	draw_line(353, 84, 353, 92);
+	draw_line(353, 109, 353, 120);
+	draw_line(354, 65, 354, 66);
+	draw_line(354, 69, 354, 70);
+	draw_line(354, 77, 354, 78);
+	draw_line(354, 82, 354, 83);
+	draw_line(354, 85, 354, 91);
+	draw_line(354, 93, 354, 94);
+	draw_line(354, 109, 354, 120);
+	draw_line(355, 65, 355, 66);
+	draw_line(355, 69, 355, 70);
+	draw_dot(355, 77);
+	draw_line(355, 81, 355, 82);
+	draw_line(355, 84, 355, 95);
+	draw_line(355, 108, 355, 120);
+	draw_line(356, 66, 356, 67);
+	draw_line(356, 69, 356, 70);
+	draw_line(356, 80, 356, 81);
+	draw_line(356, 83, 356, 92);
+	draw_dot(356, 98);
+	draw_line(356, 107, 356, 119);
+	draw_line(356, 137, 356, 143);
+	draw_line(357, 67, 357, 70);
+	draw_line(357, 80, 357, 81);
+	draw_line(357, 83, 357, 89);
+	draw_line(357, 98, 357, 99);
+	draw_line(357, 106, 357, 118);
+	draw_line(357, 136, 357, 143);
+	draw_line(358, 67, 358, 70);
+	draw_dot(358, 77);
+	draw_line(358, 80, 358, 88);
+	draw_dot(358, 99);
+	draw_line(358, 105, 358, 117);
+	draw_line(358, 135, 358, 144);
+	draw_line(359, 68, 359, 70);
+	draw_line(359, 76, 359, 77);
+	draw_line(359, 80, 359, 87);
+	draw_line(359, 91, 359, 96);
+	draw_line(359, 99, 359, 100);
+	draw_line(359, 104, 359, 116);
+	draw_line(359, 118, 359, 123);
+	draw_line(359, 133, 359, 144);
+	draw_line(360, 69, 360, 70);
+	draw_line(360, 76, 360, 77);
+	draw_line(360, 79, 360, 86);
+	draw_line(360, 89, 360, 93);
+	draw_line(360, 99, 360, 100);
+	draw_line(360, 102, 360, 113);
+	draw_line(360, 118, 360, 125);
+	draw_line(360, 130, 360, 143);
+	draw_line(361, 70, 361, 71);
+	draw_line(361, 76, 361, 77);
+	draw_line(361, 80, 361, 91);
+	draw_dot(361, 99);
+	draw_line(361, 101, 361, 112);
+	draw_line(361, 116, 361, 126);
+	draw_line(361, 128, 361, 142);
+	draw_line(362, 70, 362, 71);
+	draw_dot(362, 77);
+	draw_line(362, 80, 362, 89);
+	draw_line(362, 94, 362, 96);
+	draw_line(362, 100, 362, 110);
+	draw_line(362, 115, 362, 139);
+	draw_dot(363, 71);
+	draw_line(363, 77, 363, 88);
+	draw_dot(363, 94);
+	draw_line(363, 96, 363, 97);
+	draw_line(363, 99, 363, 109);
+	draw_line(363, 113, 363, 137);
+	draw_line(364, 70, 364, 72);
+	draw_line(364, 77, 364, 87);
+	draw_line(364, 98, 364, 108);
+	draw_line(364, 113, 364, 136);
+	draw_line(365, 70, 365, 72);
+	draw_line(365, 77, 365, 88);
+	draw_line(365, 96, 365, 107);
+	draw_line(365, 114, 365, 137);
+	draw_line(366, 70, 366, 72);
+	draw_line(366, 77, 366, 87);
+	draw_line(366, 90, 366, 105);
+	draw_line(366, 115, 366, 139);
+	draw_line(367, 69, 367, 72);
+	draw_line(367, 77, 367, 86);
+	draw_line(367, 88, 367, 90);
+	draw_line(367, 94, 367, 104);
+	draw_line(367, 115, 367, 142);
+	draw_line(368, 68, 368, 72);
+	draw_line(368, 77, 368, 103);
+	draw_line(368, 116, 368, 144);
+	draw_line(369, 67, 369, 72);
+	draw_line(369, 77, 369, 102);
+	draw_line(369, 116, 369, 151);
+	draw_line(370, 61, 370, 72);
+	draw_line(370, 77, 370, 103);
+	draw_line(370, 115, 370, 152);
+	draw_dot(371, 49);
+	draw_line(371, 61, 371, 72);
+	draw_line(371, 76, 371, 104);
+	draw_line(371, 115, 371, 153);
+	draw_line(372, 49, 372, 52);
+	draw_line(372, 55, 372, 71);
+	draw_line(372, 76, 372, 105);
+	draw_line(372, 113, 372, 154);
+	draw_line(372, 168, 372, 169);
+	draw_line(373, 50, 373, 70);
+	draw_line(373, 76, 373, 106);
+	draw_line(373, 109, 373, 155);
+	draw_line(373, 167, 373, 170);
+	draw_line(374, 51, 374, 70);
+	draw_line(374, 76, 374, 100);
+	draw_line(374, 105, 374, 107);
+	draw_line(374, 109, 374, 155);
+	draw_line(374, 164, 374, 175);
+	draw_line(374, 193, 374, 197);
+	draw_line(375, 51, 375, 69);
+	draw_line(375, 75, 375, 102);
+	draw_dot(375, 107);
+	draw_line(375, 110, 375, 156);
+	draw_line(375, 163, 375, 179);
+	draw_line(375, 191, 375, 198);
+	draw_dot(376, 47);
+	draw_line(376, 51, 376, 68);
+	draw_line(376, 74, 376, 103);
+	draw_dot(376, 105);
+	draw_line(376, 107, 376, 108);
+	draw_line(376, 110, 376, 157);
+	draw_line(376, 160, 376, 183);
+	draw_line(376, 189, 376, 199);
+	draw_line(377, 48, 377, 104);
+	draw_dot(377, 106);
+	draw_dot(377, 108);
+	draw_line(377, 111, 377, 203);
+	draw_line(378, 49, 378, 107);
+	draw_line(378, 111, 378, 204);
+	draw_line(379, 50, 379, 107);
+	draw_line(379, 110, 379, 205);
+	draw_line(380, 51, 380, 107);
+	draw_line(380, 109, 380, 206);
+	draw_line(381, 53, 381, 206);
+	draw_line(382, 54, 382, 173);
+	draw_line(382, 195, 382, 207);
+	draw_line(383, 56, 383, 160);
+	draw_line(383, 165, 383, 166);
+	draw_line(383, 169, 383, 171);
+	draw_dot(383, 173);
+	draw_line(383, 200, 383, 207);
+	draw_line(384, 58, 384, 159);
+	draw_line(384, 201, 384, 207);
+	draw_line(385, 57, 385, 159);
+	draw_line(385, 202, 385, 206);
+	draw_line(386, 57, 386, 151);
+	draw_line(386, 156, 386, 157);
+	draw_line(386, 204, 386, 205);
+	draw_line(387, 57, 387, 149);
+	draw_line(388, 56, 388, 147);
+	draw_line(389, 55, 389, 144);
+	draw_line(390, 54, 390, 142);
+	draw_line(391, 54, 391, 83);
+	draw_line(391, 85, 391, 138);
+	draw_line(392, 53, 392, 81);
+	draw_line(392, 84, 392, 134);
+	draw_line(393, 53, 393, 80);
+	draw_line(393, 83, 393, 133);
+	draw_line(394, 53, 394, 133);
+	draw_line(395, 53, 395, 134);
+	draw_line(396, 53, 396, 80);
+	draw_line(396, 83, 396, 112);
+	draw_line(396, 117, 396, 135);
+	draw_line(397, 54, 397, 74);
+	draw_line(397, 76, 397, 77);
+	draw_dot(397, 83);
+	draw_line(397, 87, 397, 110);
+	draw_line(397, 117, 397, 137);
+	draw_line(398, 54, 398, 76);
+	draw_line(398, 91, 398, 112);
+	draw_line(398, 117, 398, 119);
+	draw_line(398, 121, 398, 122);
+	draw_line(398, 124, 398, 137);
+	draw_line(399, 55, 399, 76);
+	draw_line(399, 92, 399, 114);
+	draw_line(399, 116, 399, 118);
+	draw_line(399, 124, 399, 134);
+	draw_line(400, 55, 400, 75);
+	draw_line(400, 94, 400, 116);
+	draw_line(400, 124, 400, 133);
+	draw_line(401, 56, 401, 74);
+	draw_line(401, 102, 401, 118);
+	draw_line(401, 125, 401, 129);
+	draw_line(402, 58, 402, 59);
+	draw_line(402, 65, 402, 72);
+	draw_line(402, 107, 402, 120);
+	draw_dot(402, 122);
+	draw_dot(402, 128);
+	draw_line(403, 108, 403, 123);
+	draw_line(404, 110, 404, 125);
+	draw_line(405, 112, 405, 126);
+	draw_line(406, 114, 406, 126);
+	draw_line(407, 116, 407, 126);
+	draw_line(408, 117, 408, 125);
+	draw_line(409, 119, 409, 126);
+	draw_line(410, 120, 410, 126);
+	draw_line(411, 121, 411, 126);
+	draw_line(412, 121, 412, 126);
+	draw_line(413, 120, 413, 126);
+	draw_line(414, 120, 414, 125);
+	draw_line(415, 120, 415, 124);
+	draw_line(416, 120, 416, 124);
+	draw_line(417, 119, 417, 121);
+	draw_line(418, 119, 418, 120);
+	draw_dot(469, 128);
+	draw_line(347, 244, 347, 248);
+	draw_line(347, 260, 347, 264);
+	draw_line(348, 243, 348, 246);
+	draw_line(348, 261, 348, 264);
+	draw_line(349, 243, 349, 245);
+	draw_line(349, 262, 349, 264);
+	draw_line(350, 243, 350, 244);
+	draw_line(350, 263, 350, 264);
+	draw_line(351, 243, 351, 244);
+	draw_line(351, 263, 351, 265);
+	draw_line(352, 243, 352, 244);
+	draw_line(352, 264, 352, 265);
+	draw_line(353, 243, 353, 244);
+	draw_line(353, 263, 353, 265);
+	draw_line(354, 243, 354, 244);
+	draw_line(354, 263, 354, 264);
+	draw_line(355, 243, 355, 245);
+	draw_line(355, 263, 355, 264);
+	draw_line(356, 243, 356, 246);
+	draw_line(356, 262, 356, 264);
+	draw_line(357, 244, 357, 247);
+	draw_line(357, 260, 357, 264);
+	draw_line(358, 244, 358, 250);
+	draw_line(358, 258, 358, 263);
+	draw_line(359, 245, 359, 263);
+	draw_line(360, 245, 360, 262);
+	draw_line(361, 246, 361, 261);
+	draw_line(362, 247, 362, 260);
+	draw_line(363, 249, 363, 258);
+	draw_line(364, 251, 364, 256);
+	draw_dot(392, 244);
+	draw_line(392, 263, 392, 264);
+	draw_line(393, 243, 393, 245);
+	draw_line(393, 263, 393, 264);
+	draw_line(394, 243, 394, 245);
+	draw_line(394, 263, 394, 264);
+	draw_line(395, 243, 395, 246);
+	draw_line(395, 261, 395, 264);
+	draw_line(396, 243, 396, 264);
+	draw_line(397, 243, 397, 264);
+	draw_line(398, 243, 398, 264);
+	draw_line(399, 243, 399, 264);
+	draw_line(400, 245, 400, 264);
+	draw_line(401, 244, 401, 247);
+	draw_line(401, 262, 401, 264);
+	draw_line(402, 243, 402, 245);
+	draw_line(402, 263, 402, 264);
+	draw_line(403, 243, 403, 244);
+	draw_line(403, 263, 403, 264);
+	draw_line(404, 243, 404, 245);
+	draw_line(405, 243, 405, 245);
+	draw_line(406, 243, 406, 246);
+	draw_line(407, 243, 407, 247);
+	draw_line(408, 243, 408, 247);
+	draw_line(409, 244, 409, 246);
+	set_color(7165695);
+	draw_line(409, 92, 409, 93);
+	draw_line(409, 96, 409, 97);
+	draw_line(410, 92, 410, 101);
+	draw_line(411, 90, 411, 102);
+	draw_line(412, 92, 412, 103);
+	draw_line(413, 96, 413, 103);
+	draw_line(414, 98, 414, 105);
+	draw_line(415, 99, 415, 105);
+	draw_line(416, 98, 416, 106);
+	draw_line(417, 98, 417, 106);
+	draw_line(418, 98, 418, 106);
+	draw_line(419, 99, 419, 106);
+	draw_line(420, 99, 420, 106);
+	draw_line(421, 100, 421, 107);
+	draw_line(422, 100, 422, 107);
+	draw_line(423, 101, 423, 108);
+	draw_line(423, 123, 423, 127);
+	draw_line(423, 129, 423, 132);
+	draw_line(424, 101, 424, 108);
+	draw_line(424, 122, 424, 132);
+	draw_line(424, 197, 424, 198);
+	draw_line(425, 102, 425, 108);
+	draw_line(425, 120, 425, 132);
+	draw_line(425, 194, 425, 200);
+	draw_line(426, 102, 426, 109);
+	draw_line(426, 119, 426, 134);
+	draw_line(426, 193, 426, 206);
+	draw_line(427, 102, 427, 109);
+	draw_line(427, 119, 427, 133);
+	draw_line(427, 190, 427, 207);
+	draw_line(428, 103, 428, 109);
+	draw_line(428, 119, 428, 132);
+	draw_line(428, 183, 428, 207);
+	draw_line(429, 103, 429, 109);
+	draw_line(429, 120, 429, 131);
+	draw_line(429, 170, 429, 208);
+	draw_dot(430, 64);
+	draw_line(430, 101, 430, 109);
+	draw_line(430, 120, 430, 130);
+	draw_line(430, 170, 430, 208);
+	draw_dot(431, 54);
+	draw_dot(431, 64);
+	draw_line(431, 100, 431, 109);
+	draw_line(431, 120, 431, 129);
+	draw_line(431, 169, 431, 207);
+	draw_dot(432, 60);
+	draw_dot(432, 63);
+	draw_dot(432, 86);
+	draw_line(432, 98, 432, 109);
+	draw_line(432, 116, 432, 117);
+	draw_line(432, 120, 432, 129);
+	draw_line(432, 168, 432, 190);
+	draw_line(432, 203, 432, 207);
+	draw_dot(433, 50);
+	draw_dot(433, 53);
+	draw_dot(433, 60);
+	draw_dot(433, 63);
+	draw_dot(433, 65);
+	draw_line(433, 84, 433, 86);
+	draw_line(433, 95, 433, 109);
+	draw_line(433, 115, 433, 129);
+	draw_line(433, 137, 433, 138);
+	draw_line(433, 168, 433, 186);
+	draw_line(433, 204, 433, 207);
+	draw_dot(434, 50);
+	draw_line(434, 52, 434, 53);
+	draw_dot(434, 60);
+	draw_line(434, 62, 434, 64);
+	draw_line(434, 67, 434, 69);
+	draw_line(434, 83, 434, 87);
+	draw_line(434, 92, 434, 109);
+	draw_line(434, 114, 434, 148);
+	draw_line(434, 167, 434, 183);
+	draw_line(435, 49, 435, 50);
+	draw_line(435, 52, 435, 53);
+	draw_dot(435, 60);
+	draw_line(435, 62, 435, 63);
+	draw_line(435, 65, 435, 72);
+	draw_line(435, 81, 435, 108);
+	draw_line(435, 114, 435, 153);
+	draw_line(435, 166, 435, 181);
+	draw_line(436, 50, 436, 54);
+	draw_line(436, 60, 436, 73);
+	draw_line(436, 82, 436, 106);
+	draw_line(436, 114, 436, 158);
+	draw_line(436, 164, 436, 178);
+	draw_line(437, 50, 437, 55);
+	draw_line(437, 59, 437, 74);
+	draw_line(437, 80, 437, 81);
+	draw_line(437, 84, 437, 104);
+	draw_line(437, 112, 437, 180);
+	draw_line(438, 50, 438, 56);
+	draw_line(438, 58, 438, 81);
+	draw_line(438, 85, 438, 180);
+	draw_line(439, 51, 439, 177);
+	draw_line(440, 52, 440, 171);
+	draw_line(441, 54, 441, 167);
+	draw_line(442, 55, 442, 166);
+	draw_line(443, 55, 443, 164);
+	draw_line(444, 54, 444, 157);
+	draw_line(445, 54, 445, 150);
+	draw_line(446, 54, 446, 142);
+	draw_line(447, 54, 447, 139);
+	draw_line(448, 54, 448, 139);
+	draw_line(449, 54, 449, 148);
+	draw_line(450, 54, 450, 162);
+	draw_line(451, 54, 451, 164);
+	draw_line(452, 54, 452, 164);
+	draw_line(453, 54, 453, 165);
+	draw_line(454, 55, 454, 101);
+	draw_dot(454, 105);
+	draw_line(454, 107, 454, 165);
+	draw_line(455, 55, 455, 99);
+	draw_line(455, 104, 455, 105);
+	draw_line(455, 107, 455, 166);
+	draw_line(456, 56, 456, 104);
+	draw_line(456, 108, 456, 166);
+	draw_line(457, 57, 457, 99);
+	draw_dot(457, 108);
+	draw_line(457, 111, 457, 166);
+	draw_line(458, 58, 458, 101);
+	draw_line(458, 103, 458, 104);
+	draw_line(458, 107, 458, 108);
+	draw_line(458, 111, 458, 156);
+	draw_line(458, 160, 458, 168);
+	draw_line(459, 59, 459, 73);
+	draw_line(459, 76, 459, 109);
+	draw_line(459, 111, 459, 152);
+	draw_line(459, 160, 459, 169);
+	draw_dot(459, 173);
+	draw_line(460, 61, 460, 72);
+	draw_line(460, 79, 460, 108);
+	draw_line(460, 112, 460, 148);
+	draw_line(460, 160, 460, 174);
+	draw_line(461, 63, 461, 71);
+	draw_line(461, 79, 461, 108);
+	draw_line(461, 112, 461, 144);
+	draw_line(461, 160, 461, 171);
+	draw_line(462, 81, 462, 107);
+	draw_line(462, 113, 462, 140);
+	draw_line(462, 160, 462, 172);
+	draw_line(463, 81, 463, 106);
+	draw_dot(463, 115);
+	draw_line(463, 118, 463, 139);
+	draw_line(463, 160, 463, 170);
+	draw_line(463, 172, 463, 174);
+	draw_line(464, 82, 464, 107);
+	draw_line(464, 118, 464, 137);
+	draw_line(464, 160, 464, 170);
+	draw_line(465, 82, 465, 92);
+	draw_line(465, 95, 465, 108);
+	draw_line(465, 119, 465, 135);
+	draw_line(465, 160, 465, 171);
+	draw_line(466, 82, 466, 93);
+	draw_line(466, 99, 466, 110);
+	draw_line(466, 119, 466, 133);
+	draw_line(466, 161, 466, 171);
+	draw_line(467, 83, 467, 95);
+	draw_line(467, 100, 467, 111);
+	draw_line(467, 120, 467, 133);
+	draw_line(467, 163, 467, 172);
+	draw_line(468, 83, 468, 87);
+	draw_line(468, 89, 468, 94);
+	draw_line(468, 98, 468, 112);
+	draw_line(468, 121, 468, 131);
+	draw_line(468, 165, 468, 173);
+	draw_line(469, 83, 469, 87);
+	draw_line(469, 90, 469, 95);
+	draw_line(469, 103, 469, 114);
+	draw_line(469, 123, 469, 127);
+	draw_line(469, 166, 469, 174);
+	draw_line(470, 82, 470, 88);
+	draw_line(470, 90, 470, 96);
+	draw_line(470, 104, 470, 115);
+	draw_line(470, 167, 470, 175);
+	draw_line(471, 82, 471, 88);
+	draw_line(471, 91, 471, 96);
+	draw_line(471, 105, 471, 117);
+	draw_line(471, 168, 471, 176);
+	draw_line(472, 82, 472, 89);
+	draw_line(472, 91, 472, 97);
+	draw_line(472, 105, 472, 119);
+	draw_line(472, 170, 472, 177);
+	draw_line(473, 81, 473, 82);
+	draw_line(473, 84, 473, 89);
+	draw_line(473, 91, 473, 92);
+	draw_line(473, 94, 473, 98);
+	draw_line(473, 105, 473, 120);
+	draw_line(473, 172, 473, 180);
+	draw_dot(474, 81);
+	draw_line(474, 84, 474, 89);
+	draw_line(474, 92, 474, 93);
+	draw_line(474, 95, 474, 99);
+	draw_line(474, 105, 474, 106);
+	draw_line(474, 109, 474, 120);
+	draw_line(474, 173, 474, 191);
+	draw_dot(475, 81);
+	draw_line(475, 84, 475, 90);
+	draw_line(475, 92, 475, 94);
+	draw_line(475, 97, 475, 101);
+	draw_line(475, 103, 475, 106);
+	draw_line(475, 110, 475, 120);
+	draw_line(475, 174, 475, 192);
+	draw_line(476, 84, 476, 90);
+	draw_line(476, 93, 476, 94);
+	draw_line(476, 99, 476, 103);
+	draw_line(476, 111, 476, 120);
+	draw_line(476, 175, 476, 192);
+	draw_line(477, 84, 477, 91);
+	draw_line(477, 94, 477, 95);
+	draw_line(477, 111, 477, 119);
+	draw_line(477, 176, 477, 192);
+	draw_line(478, 84, 478, 87);
+	draw_line(478, 89, 478, 92);
+	draw_line(478, 96, 478, 97);
+	draw_line(478, 107, 478, 119);
+	draw_line(478, 177, 478, 192);
+	draw_line(479, 85, 479, 88);
+	draw_line(479, 90, 479, 94);
+	draw_line(479, 96, 479, 101);
+	draw_line(479, 108, 479, 119);
+	draw_line(479, 178, 479, 191);
+	draw_line(480, 85, 480, 88);
+	draw_line(480, 92, 480, 99);
+	draw_line(480, 112, 480, 119);
+	draw_line(481, 86, 481, 89);
+	draw_dot(481, 97);
+	draw_line(481, 110, 481, 118);
+	draw_dot(482, 83);
+	draw_line(482, 87, 482, 90);
+	draw_line(482, 107, 482, 117);
+	draw_line(483, 84, 483, 86);
+	draw_line(483, 88, 483, 94);
+	draw_line(483, 107, 483, 111);
+	draw_line(483, 114, 483, 115);
+	draw_line(484, 90, 484, 94);
+	draw_line(484, 114, 484, 115);
+	draw_dot(485, 114);
+	draw_dot(486, 114);
+	draw_line(437, 250, 437, 258);
+	draw_line(438, 248, 438, 260);
+	draw_line(439, 246, 439, 261);
+	draw_line(440, 245, 440, 262);
+	draw_line(441, 245, 441, 263);
+	draw_line(442, 244, 442, 251);
+	draw_line(442, 256, 442, 263);
+	draw_line(443, 244, 443, 246);
+	draw_line(443, 250, 443, 251);
+	draw_line(443, 259, 443, 264);
+	draw_line(444, 243, 444, 245);
+	draw_line(444, 250, 444, 251);
+	draw_line(444, 260, 444, 264);
+	draw_line(445, 243, 445, 244);
+	draw_line(445, 250, 445, 251);
+	draw_line(445, 261, 445, 264);
+	draw_line(446, 243, 446, 244);
+	draw_line(446, 250, 446, 251);
+	draw_line(446, 262, 446, 264);
+	draw_line(447, 243, 447, 244);
+	draw_line(447, 250, 447, 251);
+	draw_line(447, 262, 447, 264);
+	draw_line(448, 243, 448, 244);
+	draw_line(448, 250, 448, 251);
+	draw_line(448, 263, 448, 264);
+	draw_line(449, 243, 449, 244);
+	draw_line(449, 250, 449, 251);
+	draw_line(449, 263, 449, 264);
+	draw_line(450, 243, 450, 245);
+	draw_line(450, 250, 450, 251);
+	draw_line(450, 263, 450, 264);
+	draw_line(451, 243, 451, 251);
+	draw_line(451, 262, 451, 264);
+	draw_line(452, 244, 452, 251);
+	draw_line(452, 262, 452, 264);
+	draw_line(453, 245, 453, 251);
+	draw_line(453, 262, 453, 263);
+	draw_line(454, 246, 454, 251);
+	draw_line(454, 260, 454, 262);
+	draw_line(455, 247, 455, 251);
+	draw_line(455, 259, 455, 261);
+	draw_dot(456, 250);
+	draw_line(456, 258, 456, 260);
+	draw_line(484, 243, 484, 244);
+	draw_line(485, 243, 485, 244);
+	draw_line(486, 243, 486, 246);
+	draw_line(487, 243, 487, 248);
+	draw_line(488, 243, 488, 250);
+	draw_line(489, 243, 489, 253);
+	draw_line(490, 243, 490, 255);
+	set_color(4509041);
+	draw_line(495, 116, 495, 121);
+	draw_line(496, 114, 496, 121);
+	draw_line(497, 114, 497, 125);
+	draw_line(498, 114, 498, 127);
+	draw_dot(499, 66);
+	draw_line(499, 114, 499, 127);
+	draw_line(500, 66, 500, 68);
+	draw_line(500, 114, 500, 129);
+	draw_line(501, 65, 501, 71);
+	draw_line(501, 114, 501, 131);
+	draw_line(502, 65, 502, 72);
+	draw_line(502, 114, 502, 132);
+	draw_line(502, 192, 502, 193);
+	draw_line(503, 65, 503, 72);
+	draw_line(503, 114, 503, 133);
+	draw_line(503, 190, 503, 195);
+	draw_line(504, 65, 504, 73);
+	draw_line(504, 114, 504, 137);
+	draw_line(504, 166, 504, 179);
+	draw_line(504, 186, 504, 196);
+	draw_line(505, 65, 505, 73);
+	draw_line(505, 114, 505, 139);
+	draw_line(505, 165, 505, 200);
+	draw_line(506, 58, 506, 61);
+	draw_line(506, 63, 506, 71);
+	draw_line(506, 114, 506, 142);
+	draw_line(506, 164, 506, 201);
+	draw_line(507, 57, 507, 70);
+	draw_dot(507, 75);
+	draw_line(507, 109, 507, 111);
+	draw_line(507, 113, 507, 144);
+	draw_line(507, 163, 507, 202);
+	draw_line(508, 57, 508, 69);
+	draw_line(508, 72, 508, 77);
+	draw_line(508, 87, 508, 92);
+	draw_line(508, 108, 508, 111);
+	draw_line(508, 113, 508, 147);
+	draw_line(508, 162, 508, 202);
+	draw_line(509, 57, 509, 59);
+	draw_line(509, 61, 509, 78);
+	draw_line(509, 84, 509, 97);
+	draw_line(509, 109, 509, 148);
+	draw_line(509, 161, 509, 183);
+	draw_dot(509, 189);
+	draw_line(509, 192, 509, 202);
+	draw_line(510, 57, 510, 59);
+	draw_line(510, 61, 510, 77);
+	draw_line(510, 82, 510, 100);
+	draw_line(510, 109, 510, 150);
+	draw_line(510, 160, 510, 178);
+	draw_line(510, 195, 510, 202);
+	draw_line(511, 58, 511, 78);
+	draw_line(511, 81, 511, 105);
+	draw_line(511, 110, 511, 152);
+	draw_line(511, 159, 511, 175);
+	draw_line(511, 197, 511, 202);
+	draw_line(512, 58, 512, 78);
+	draw_line(512, 81, 512, 107);
+	draw_line(512, 110, 512, 173);
+	draw_line(512, 198, 512, 202);
+	draw_line(513, 54, 513, 79);
+	draw_line(513, 81, 513, 107);
+	draw_line(513, 109, 513, 174);
+	draw_line(514, 52, 514, 79);
+	draw_line(514, 82, 514, 172);
+	draw_line(515, 52, 515, 79);
+	draw_line(515, 81, 515, 164);
+	draw_line(515, 170, 515, 171);
+	draw_line(516, 52, 516, 162);
+	draw_line(517, 53, 517, 161);
+	draw_line(518, 52, 518, 162);
+	draw_line(518, 169, 518, 172);
+	draw_line(519, 53, 519, 174);
+	draw_line(520, 56, 520, 175);
+	draw_line(520, 199, 520, 202);
+	draw_line(521, 56, 521, 176);
+	draw_line(521, 197, 521, 202);
+	draw_line(522, 56, 522, 178);
+	draw_line(522, 195, 522, 203);
+	draw_line(523, 56, 523, 182);
+	draw_line(523, 188, 523, 203);
+	draw_line(524, 56, 524, 81);
+	draw_line(524, 83, 524, 152);
+	draw_line(524, 159, 524, 203);
+	draw_line(525, 56, 525, 80);
+	draw_line(525, 84, 525, 149);
+	draw_line(525, 161, 525, 202);
+	draw_line(526, 56, 526, 80);
+	draw_line(526, 84, 526, 146);
+	draw_line(526, 163, 526, 202);
+	draw_line(527, 57, 527, 80);
+	draw_line(527, 84, 527, 143);
+	draw_line(527, 164, 527, 201);
+	draw_line(528, 58, 528, 80);
+	draw_line(528, 84, 528, 139);
+	draw_line(528, 166, 528, 198);
+	draw_line(529, 59, 529, 79);
+	draw_line(529, 84, 529, 135);
+	draw_line(529, 167, 529, 172);
+	draw_line(530, 60, 530, 78);
+	draw_line(530, 84, 530, 135);
+	draw_line(531, 61, 531, 73);
+	draw_dot(531, 76);
+	draw_line(531, 85, 531, 136);
+	draw_line(532, 62, 532, 71);
+	draw_line(532, 86, 532, 134);
+	draw_line(533, 63, 533, 68);
+	draw_line(533, 89, 533, 133);
+	draw_line(534, 62, 534, 63);
+	draw_line(534, 65, 534, 66);
+	draw_line(534, 68, 534, 71);
+	draw_line(534, 94, 534, 99);
+	draw_line(534, 103, 534, 131);
+	draw_dot(535, 63);
+	draw_line(535, 65, 535, 67);
+	draw_line(535, 108, 535, 131);
+	draw_line(536, 66, 536, 68);
+	draw_line(536, 110, 536, 114);
+	draw_line(536, 122, 536, 133);
+	draw_line(537, 123, 537, 134);
+	draw_line(538, 126, 538, 135);
+	draw_line(539, 128, 539, 136);
+	draw_line(540, 131, 540, 137);
+	draw_line(541, 132, 541, 135);
+	draw_line(542, 133, 542, 136);
+	draw_line(543, 134, 543, 136);
+	draw_line(544, 135, 544, 136);
+	draw_dot(545, 136);
+	draw_line(546, 136, 546, 137);
+	draw_line(491, 243, 491, 258);
+	draw_line(492, 243, 492, 244);
+	draw_line(492, 248, 492, 260);
+	draw_line(493, 243, 493, 244);
+	draw_line(493, 251, 493, 263);
+	draw_line(494, 253, 494, 264);
+	draw_line(495, 256, 495, 264);
+	draw_line(496, 259, 496, 263);
+	draw_line(497, 257, 497, 261);
+	draw_line(498, 254, 498, 258);
+	draw_line(499, 243, 499, 244);
+	draw_line(499, 251, 499, 256);
+	draw_line(500, 243, 500, 245);
+	draw_line(500, 248, 500, 253);
+	draw_line(501, 243, 501, 251);
+	draw_line(502, 243, 502, 248);
+	draw_line(503, 243, 503, 246);
+	draw_line(504, 243, 504, 245);
+	draw_line(505, 243, 505, 244);
+	draw_line(506, 243, 506, 244);
+	draw_line(533, 249, 533, 258);
+	draw_line(534, 248, 534, 260);
+	draw_line(535, 246, 535, 261);
+	draw_line(536, 245, 536, 262);
+	draw_line(537, 245, 537, 263);
+	draw_line(538, 244, 538, 251);
+	draw_line(538, 256, 538, 263);
+	draw_line(539, 244, 539, 246);
+	draw_line(539, 250, 539, 251);
+	draw_line(539, 259, 539, 264);
+	draw_line(540, 243, 540, 245);
+	draw_line(540, 250, 540, 251);
+	draw_line(540, 260, 540, 264);
+	draw_line(541, 243, 541, 244);
+	draw_line(541, 250, 541, 251);
+	draw_line(541, 261, 541, 264);
+	draw_line(542, 243, 542, 244);
+	draw_line(542, 250, 542, 251);
+	draw_line(542, 262, 542, 264);
+	draw_dot(543, 243);
+	draw_line(543, 250, 543, 251);
+	draw_line(543, 262, 543, 264);
+	draw_line(544, 243, 544, 244);
+	draw_line(544, 250, 544, 251);
+	draw_line(544, 263, 544, 264);
+	draw_line(545, 243, 545, 244);
+	draw_line(545, 250, 545, 251);
+	draw_line(545, 263, 545, 264);
+	draw_line(546, 243, 546, 245);
+	draw_line(546, 250, 546, 251);
+	draw_line(546, 263, 546, 264);
+	draw_line(547, 244, 547, 251);
+	draw_line(547, 263, 547, 264);
+	draw_line(548, 244, 548, 251);
+	draw_line(548, 262, 548, 264);
+	draw_line(549, 245, 549, 251);
+	draw_line(549, 262, 549, 263);
+	draw_line(550, 246, 550, 251);
+	draw_line(550, 260, 550, 262);
+	draw_line(551, 247, 551, 251);
+	draw_line(551, 259, 551, 261);
+	draw_dot(552, 259);
+	set_color(16736989);
+	draw_line(553, 72, 553, 74);
+	draw_line(554, 72, 554, 73);
+	draw_line(555, 71, 555, 72);
+	draw_dot(555, 79);
+	draw_dot(556, 71);
+	draw_line(556, 77, 556, 78);
+	draw_line(557, 70, 557, 71);
+	draw_line(557, 77, 557, 83);
+	draw_line(558, 70, 558, 71);
+	draw_dot(558, 74);
+	draw_line(558, 76, 558, 79);
+	draw_line(558, 84, 558, 85);
+	draw_line(559, 70, 559, 71);
+	draw_dot(559, 73);
+	draw_line(559, 75, 559, 77);
+	draw_line(560, 70, 560, 71);
+	draw_line(560, 73, 560, 76);
+	draw_dot(560, 86);
+	draw_line(560, 118, 560, 120);
+	draw_line(560, 123, 560, 129);
+	draw_line(561, 70, 561, 75);
+	draw_dot(561, 86);
+	draw_line(561, 116, 561, 128);
+	draw_line(562, 70, 562, 75);
+	draw_line(562, 85, 562, 86);
+	draw_line(562, 115, 562, 130);
+	draw_line(563, 70, 563, 74);
+	draw_dot(563, 85);
+	draw_line(563, 114, 563, 134);
+	draw_line(564, 70, 564, 74);
+	draw_line(564, 114, 564, 134);
+	draw_dot(565, 63);
+	draw_line(565, 69, 565, 73);
+	draw_line(565, 114, 565, 133);
+	draw_line(566, 62, 566, 64);
+	draw_line(566, 68, 566, 73);
+	draw_line(566, 114, 566, 141);
+	draw_line(566, 167, 566, 169);
+	draw_line(567, 61, 567, 64);
+	draw_line(567, 66, 567, 73);
+	draw_line(567, 77, 567, 83);
+	draw_line(567, 115, 567, 147);
+	draw_line(567, 166, 567, 170);
+	draw_line(568, 60, 568, 73);
+	draw_line(568, 75, 568, 76);
+	draw_line(568, 83, 568, 84);
+	draw_line(568, 115, 568, 152);
+	draw_line(568, 164, 568, 170);
+	draw_line(569, 60, 569, 75);
+	draw_dot(569, 84);
+	draw_line(569, 115, 569, 156);
+	draw_line(569, 162, 569, 173);
+	draw_line(570, 60, 570, 74);
+	draw_dot(570, 84);
+	draw_line(570, 114, 570, 176);
+	draw_line(571, 59, 571, 72);
+	draw_dot(571, 84);
+	draw_line(571, 114, 571, 178);
+	draw_line(572, 57, 572, 71);
+	draw_line(572, 87, 572, 91);
+	draw_line(572, 108, 572, 109);
+	draw_line(572, 114, 572, 181);
+	draw_line(573, 56, 573, 71);
+	draw_line(573, 87, 573, 93);
+	draw_line(573, 100, 573, 102);
+	draw_line(573, 106, 573, 109);
+	draw_line(573, 113, 573, 183);
+	draw_line(574, 56, 574, 70);
+	draw_line(574, 86, 574, 95);
+	draw_line(574, 99, 574, 104);
+	draw_line(574, 106, 574, 109);
+	draw_line(574, 112, 574, 190);
+	draw_line(575, 56, 575, 70);
+	draw_line(575, 85, 575, 105);
+	draw_line(575, 107, 575, 110);
+	draw_line(575, 112, 575, 201);
+	draw_line(576, 55, 576, 73);
+	draw_line(576, 77, 576, 79);
+	draw_line(576, 84, 576, 105);
+	draw_line(576, 108, 576, 160);
+	draw_line(576, 163, 576, 202);
+	draw_line(577, 56, 577, 80);
+	draw_line(577, 83, 577, 106);
+	draw_line(577, 109, 577, 153);
+	draw_line(577, 166, 577, 170);
+	draw_line(577, 172, 577, 175);
+	draw_line(577, 177, 577, 203);
+	draw_line(578, 56, 578, 81);
+	draw_line(578, 84, 578, 106);
+	draw_line(578, 108, 578, 144);
+	draw_line(578, 168, 578, 169);
+	draw_line(578, 173, 578, 174);
+	draw_line(578, 185, 578, 203);
+	draw_line(579, 56, 579, 80);
+	draw_line(579, 82, 579, 137);
+	draw_line(579, 190, 579, 203);
+	draw_line(580, 57, 580, 79);
+	draw_line(580, 81, 580, 136);
+	draw_line(580, 194, 580, 203);
+	draw_line(581, 57, 581, 137);
+	draw_line(581, 197, 581, 203);
+	draw_line(582, 56, 582, 137);
+	draw_line(582, 200, 582, 201);
+	draw_line(583, 56, 583, 136);
+	draw_line(584, 56, 584, 139);
+	draw_line(585, 56, 585, 142);
+	draw_line(586, 56, 586, 145);
+	draw_line(587, 56, 587, 148);
+	draw_line(588, 56, 588, 150);
+	draw_line(589, 56, 589, 153);
+	draw_line(590, 56, 590, 80);
+	draw_line(590, 83, 590, 155);
+	draw_line(591, 56, 591, 80);
+	draw_line(591, 82, 591, 158);
+	draw_line(592, 56, 592, 160);
+	draw_line(593, 57, 593, 78);
+	draw_line(593, 80, 593, 162);
+	draw_line(593, 170, 593, 171);
+	draw_line(594, 57, 594, 77);
+	draw_line(594, 80, 594, 112);
+	draw_line(594, 118, 594, 163);
+	draw_line(594, 165, 594, 172);
+	draw_line(595, 58, 595, 76);
+	draw_line(595, 81, 595, 113);
+	draw_line(595, 118, 595, 173);
+	draw_line(596, 58, 596, 75);
+	draw_line(596, 83, 596, 107);
+	draw_line(596, 110, 596, 113);
+	draw_line(596, 118, 596, 174);
+	draw_line(597, 58, 597, 74);
+	draw_line(597, 84, 597, 107);
+	draw_line(597, 110, 597, 111);
+	draw_line(597, 117, 597, 137);
+	draw_line(597, 139, 597, 173);
+	draw_line(598, 58, 598, 74);
+	draw_line(598, 86, 598, 107);
+	draw_line(598, 117, 598, 136);
+	draw_line(598, 149, 598, 175);
+	draw_line(599, 58, 599, 76);
+	draw_line(599, 91, 599, 106);
+	draw_line(599, 119, 599, 135);
+	draw_line(599, 159, 599, 177);
+	draw_line(600, 59, 600, 77);
+	draw_dot(600, 89);
+	draw_line(600, 97, 600, 104);
+	draw_line(600, 121, 600, 133);
+	draw_line(600, 162, 600, 180);
+	draw_line(601, 60, 601, 77);
+	draw_line(601, 88, 601, 89);
+	draw_line(601, 101, 601, 103);
+	draw_line(601, 121, 601, 132);
+	draw_line(601, 163, 601, 183);
+	draw_line(601, 196, 601, 201);
+	draw_line(602, 62, 602, 78);
+	draw_line(602, 121, 602, 131);
+	draw_line(602, 164, 602, 202);
+	draw_line(603, 63, 603, 79);
+	draw_line(603, 129, 603, 130);
+	draw_line(603, 165, 603, 203);
+	draw_line(604, 63, 604, 79);
+	draw_line(604, 165, 604, 203);
+	draw_line(605, 64, 605, 65);
+	draw_line(605, 68, 605, 69);
+	draw_line(605, 73, 605, 79);
+	draw_line(605, 171, 605, 203);
+	draw_dot(606, 65);
+	draw_line(606, 75, 606, 80);
+	draw_line(606, 182, 606, 203);
+	draw_line(607, 77, 607, 78);
+	draw_dot(607, 80);
+	draw_line(607, 190, 607, 202);
+	draw_line(608, 78, 608, 81);
+	draw_line(609, 78, 609, 79);
+	draw_line(609, 81, 609, 82);
+	draw_dot(610, 79);
+	draw_line(610, 81, 610, 84);
+	draw_line(610, 87, 610, 88);
+	draw_dot(611, 79);
+	draw_line(611, 82, 611, 88);
+	draw_dot(612, 80);
+	draw_line(612, 83, 612, 86);
+	draw_line(613, 80, 613, 81);
+	draw_line(614, 80, 614, 82);
+	draw_line(615, 81, 615, 83);
+	draw_dot(615, 89);
+	draw_line(616, 82, 616, 88);
+	draw_line(617, 82, 617, 87);
+	draw_line(618, 85, 618, 86);
+	draw_dot(581, 244);
+	draw_line(581, 263, 581, 264);
+	draw_line(582, 243, 582, 245);
+	draw_line(582, 263, 582, 264);
+	draw_line(583, 243, 583, 245);
+	draw_line(583, 263, 583, 264);
+	draw_line(584, 243, 584, 264);
+	draw_line(585, 243, 585, 264);
+	draw_line(586, 243, 586, 264);
+	draw_line(587, 243, 587, 264);
+	draw_line(588, 243, 588, 264);
+	draw_line(589, 245, 589, 264);
+	draw_line(590, 244, 590, 246);
+	draw_line(590, 262, 590, 264);
+	draw_line(591, 243, 591, 245);
+	draw_line(591, 263, 591, 264);
+	draw_line(592, 243, 592, 244);
+	draw_line(592, 263, 592, 264);
+	draw_line(593, 243, 593, 245);
+	draw_line(594, 243, 594, 246);
+	draw_line(595, 243, 595, 246);
+	draw_line(596, 243, 596, 247);
+	draw_line(597, 243, 597, 247);
+	draw_line(598, 244, 598, 246);
 
 	return 0;
 }
