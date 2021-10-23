@@ -177,7 +177,7 @@ int32_t rect_gradient (int32_t x, int32_t y, int32_t w, int32_t h, int32_t start
 	return return_val;
 }
 
-int32_t draw_picture () {													// 2,181 lines of code here......
+int32_t draw_picture () {									// 2,181 lines of code here...... μ'sic forever!!!
 	
 	set_color(16736825);
 	draw_line(7, 84, 7, 88);
