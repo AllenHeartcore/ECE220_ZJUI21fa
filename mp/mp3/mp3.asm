@@ -2,6 +2,7 @@
 ; This is the program for ECE220FA21 @ ZJUI Institute, Machine Programming Problem III. 
 ; Written and commented by Chen, Ziyuan on 29 September 2021. 
 ; Debugged and committed by Chen, Ziyuan on 30 September 2021. 
+; Refined and re-committed by Chen, Ziyuan on 13 October 2021. 
 ; Copyright © 2021 Chen, Ziyuan. All rights reserved. 
 
 ; ######  External References  ######
@@ -62,33 +63,31 @@ INIT_WORK				; < Phase 1: Init first cell >
 		ADD	R4, R2, #-3
 		ST	R4, OffsetS	; 	! Save for CALC_DISTANCE !
 		LDI	R4, AddrN
-		ADD	R4, R4, #-1	; 	TableCtr = N-1
-InitColumn	ADD	R1, R1, R0	; 	CurrLevD += CurrCost
+InitColumn	ADD	R4, R4, #-1	; 	Decrement counter
+		BRz	InitNext
+		ADD	R1, R1, R0	; 	CurrLevD += CurrCost
 		ADD	R5, R5, R6	; 	TablePtr += TableAdj
 		STR	R1, R5, #0
 		STR	R2, R5, #1
 		STR	R3, R5, #2	; 	Fill the table
-		ADD	R4, R4, #-1	; 	Decrement counter
-		BRz	InitNext
-		BRp	InitColumn
+		BR	InitColumn
 					; < Phase 3: Init first row >
 InitNext	LDI	R0, AddrCostD	; 	CurrCost = CostD
 		AND	R1, R1, #0	; 	CurrLevD = 0
 		LD	R2, OffsetD	; 	CurrOfst = -3
 		ADD	R3, R3, #1	; 	CurrType = 1
 		LDI	R4, AddrM
-		ADD	R4, R4, #-1	; 	TableCtr = M-1
 		LD	R5, AddrTable	; 	TablePtr = x4000
 		AND	R6, R6, #0
 		ADD	R6, R6, #3	; 	TableAdj = 3
-InitRow		ADD	R1, R1, R0	; 	CurrLevD += CurrCost
+InitRow		ADD	R4, R4, #-1	; 	Decrement counter
+		BRz	InitDone
+		ADD	R1, R1, R0	; 	CurrLevD += CurrCost
 		ADD	R5, R5, R6	; 	TablePtr += TableAdj
 		STR	R1, R5, #0
 		STR	R2, R5, #1
 		STR	R3, R5, #2	; 	Fill the table
-		ADD	R4, R4, #-1	; 	Decrement counter
-		BRz	InitDone
-		BRp	InitRow
+		BR	InitRow
 InitDone	RET
 
 
@@ -113,7 +112,9 @@ CALC_DISTANCE	ST	R7, SaveR7
 		ADD	R5, R5, #3	; 	TableFill = x4000+3M+3
 		LDI	R7, AddrN
 		ADD	R6, R6, #-1	; 	CounterC = M-1
+		BRz	InspectDone
 		ADD	R7, R7, #-1	; 	CounterR = N-1
+		BRz	InspectDone
 					; < Phase 2: Inspect cell >
 InspectCell	LD	R4, OffsetS	;   - M/S Type
 		ADD	R4, R5, R4	; 	Set TableInsp
