@@ -25,6 +25,7 @@
 	This is the program for ECE220FA21 @ ZJUI Institute, Machine Programming Problem VI. 
 	Written and commented by Chen, Ziyuan on 29 October 2021. 
 	Debugged and committed by Chen, Ziyuan on 30 October 2021. 
+	Refined and re-committed by Chen, Ziyuan on 31 October 2021. 
 	Copyright © 2021 Steven S. Lumetta and Ziyuan Chen. 
 
 	###### Functionality ######
@@ -140,7 +141,7 @@ void equalize_intensities (int32_t height, int32_t width,
 	for (uint16_t init = 0; init <= 510; init++) H[init] = 0;			// Initialize H (histogram)
 	for (int32_t pixel = 0; pixel < size; pixel++) H[L[pixel]] += 1;		// Build H
 	K[0] = H[0];									// Initialize K (accumulated histogram)
-	M[0] = 0;									// Initialize M (mapped histogram)
+	M[0] = (511 * K[0] + size - 1) / size - 1;					// Initialize M (mapped histogram)
 	for (uint16_t iter = 1; iter <= 510; iter++) {
 		K[iter] = K[iter - 1] + H[iter];					// Build K
 		M[iter] = (511 * K[iter] + size - 1) / size - 1;			// Build M
