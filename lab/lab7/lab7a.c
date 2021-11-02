@@ -16,6 +16,19 @@ main ()
 
     show_mapping (array, (int32_t*)array);
     
+    int32_t* array_ptr = &array;
+    for (int init = 0; init < 105; init++) *(array_ptr + init) = init;
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 5; j++) {
+            for (int k = 0; k < 7; k++) {
+                printf("%3d ", array[i][j][k]);
+            }
+            printf("\n");
+        }
+        printf("\n");
+    }
+
     return 0;
 }
 
