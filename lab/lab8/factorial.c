@@ -5,7 +5,8 @@ factorial (int n)
 {
     int result = 1;
 
-    while (n--) {
+    n += 1;
+    while (--n) {
         result *= n;
     }
     return result;
@@ -14,12 +15,12 @@ factorial (int n)
 int 
 main ()
 {
-    int n;
+    int m;
 
     printf ("Enter a number\n");
-    scanf ("%d", &n);
+    scanf ("%d", &m);
 
-    long val = factorial (n);
+    long val = factorial (m);
 
     printf ("%ld\n", val);
 
