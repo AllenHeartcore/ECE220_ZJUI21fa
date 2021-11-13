@@ -1,1 +1,787 @@
-PUT YOUR MP7 REPORT IN THIS FILE.
+/*	This document is formatted in Visual Studio Code. 
+	Open with VS Code and set Tab:8 to preserve formatting. 
+
+	######
+	This is the report for ECE220FA21 @ ZJUI Institute, Machine Programming Problem VII. 
+	Written by Chen, Ziyuan on 6 November 2021. 
+	Refined and committed by Chen, Ziyuan on 13 November 2021. 
+	Copyright © 2021 Chen, Ziyuan. 
+ */
+
+
+|   |  +---   -----         +---   +----  +---   |   |   ---    ---   --+--  |   |   ---         +---   +----  +---    ---   +---   -----
+|\ /|  |   >     /          |   \  |      |   >  |   |  /      /        |    |\  |  /            |   >  |      |   >  /   \  |   >    |
+| V |  +---     /           |   |  +----  +---   |   |  | ---  | ---    |    | \ |  | ---        +---   +----  +---   |   |  +---     |
+|   |  |       /            |   /  |      |   >  |   |  \   |  \   |    |    |  \|  \   |        |  \   |      |      \   /  |  \     |
+|   |  |      /             +---   +----  +---    ---    ---    ---   --+--  |   |   ---         |   \  +----  |       ---   |   \    |
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+[Program #1: Reverse Printing (printRev)]
+
+	$ ./prev <input_string>
+
+	Argument:	<input_string>	String to be reversed
+	Functionality:	Prints the reversed <input_string>. 
+	Algorithm:	1. Recursively call "print_reverse,"
+			2. print the last character per call, 
+			3. and accumulate string length per call. 
+
+	Testing history:
+			(gdb) file prev
+			Reading symbols from prev...
+			(gdb) run ""
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev ""
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+			"" reversed is "" (length 0)
+			[Inferior 1 (process 1525) exited normally]
+			(gdb) run "?"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "?"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+			"?" reversed is "?" (length 1)
+			[Inferior 1 (process 1529) exited normally]
+			(gdb) run "w~"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "w~"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+			"w~" reversed is "~w" (length 2)
+			[Inferior 1 (process 1530) exited normally]
+			(gdb) run "Rin"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Rin"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+			"Rin" reversed is "niR" (length 3)
+			[Inferior 1 (process 1532) exited normally]
+			(gdb) run "Nico"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Nico"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"Nico" reversed is "ociN" (length 32771)						// should be "(length 4)"
+			[Inferior 1 (process 1533) exited normally]
+			(gdb) run "Kayon"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Kayon"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"Kayon" reversed is "noyaK" (length 32772)						// should be "(length 5)"
+			[Inferior 1 (process 1534) exited normally]
+			(gdb) run "mu'sic"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "mu'sic"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"mu'sic" reversed is "cis'um" (length 32773)						// should be "(length 6)"
+			[Inferior 1 (process 1535) exited normally]
+			(gdb) run "Umichan"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Umichan"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+			"Umichan" reversed is "nahcimU" (length 7)
+			[Inferior 1 (process 1536) exited normally]
+			(gdb) run "Elichika"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Elichika"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+			"Elichika" reversed is "akihcilE" (length 8)
+			[Inferior 1 (process 1537) exited normally]
+			(gdb) run "LoveLive!"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "LoveLive!"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"LoveLive!" reversed is "!eviLevoL" (length 32776)					// should be "(length 9)"
+			[Inferior 1 (process 1538) exited normally]
+			(gdb) run "Minalinsky"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Minalinsky"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+			"Minalinsky" reversed is "yksnilaniM" (length 10)
+			[Inferior 1 (process 1539) exited normally]
+			(gdb) run "Tojo-Nozomi"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Tojo-Nozomi"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"Tojo-Nozomi" reversed is "imozoN-ojoT" (length 32778)					// should be "(length 11)"
+			[Inferior 1 (process 1540) exited normally]
+			(gdb) run "NcmkElnzKtum"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "NcmkElnzKtum"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+			"NcmkElnzKtum" reversed is "mutKznlEkmcN" (length 12)
+			[Inferior 1 (process 1541) exited normally]
+			(gdb) run "Kosaka_Honoka"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Kosaka_Honoka"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+			"Kosaka_Honoka" reversed is "akonoH_akasoK" (length 13)
+			[Inferior 1 (process 1542) exited normally]
+			(gdb) run "Nishikino.Maki"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Nishikino.Maki"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"Nishikino.Maki" reversed is "ikaM.onikihsiN" (length 32781)				// should be "(length 14)"
+			[Inferior 1 (process 1543) exited normally]
+			(gdb) run "Nnsr, imwknni! "
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Nnsr, imwknni! "
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+			"Nnsr, imwknni! " reversed is " !innkwmi ,rsnN" (length 15)
+			[Inferior 1 (process 1544) exited normally]
+			(gdb) run "3uqkf_siibibi@#$"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "3uqkf_siibibi@#$"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"3uqkf_siibibi@#$" reversed is "$#@ibibiis_fkqu3" (length 32783)			// should be "(length 16)"
+			[Inferior 1 (process 1546) exited normally]
+			(gdb) run "Egotdkryzwncnc%^&"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "Egotdkryzwncnc%^&"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"Egotdkryzwncnc%^&" reversed is "&^%cncnwzyrkdtogE" (length 32784)			// should be "(length 17)"
+			[Inferior 1 (process 1547) exited normally]
+			(gdb) run "5t[6ss['.7x[0ibib~"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "5t[6ss['.7x[0ibib~"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"5t[6ss['.7x[0ibib~" reversed is "~bibi0[x7.'[ss6[t5" (length 32785)			// should be "(length 18)"
+			[Inferior 1 (process 1548) exited normally]
+			(gdb) run "(^8^) piyo ** piyo~"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "(^8^) piyo ** piyo~"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"(^8^) piyo ** piyo~" reversed is "~oyip ** oyip )^8^(" (length 32786)			// should be "(length 19)"
+			[Inferior 1 (process 1549) exited normally]
+			(gdb) run "ibi_Zw6-[5w{o2[}ibi_"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "ibi_Zw6-[5w{o2[}ibi_"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+		[BUG]	"ibi_Zw6-[5w{o2[}ibi_" reversed is "_ibi}[2o{w5[-6wZ_ibi" (length 32787)		// should be "(length 20)"
+			[Inferior 1 (process 1550) exited normally]
+
+	Tracing history:
+			(gdb) break pr_buggy.c:48
+			Breakpoint 1 at 0x11bc: file pr_buggy.c, line 48.
+			(gdb) define single_step
+			Type commands for definition of "single_step".
+			End with a line saying just "end".
+			>print rest
+			>continue
+			>end
+			(gdb) run "LoveLive"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "LoveLive"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe405 "e") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb) single_step
+			$1 = 0
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe404 "ve") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+			$2 = 1
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe403 "ive") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+			$3 = 2
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe402 "Live") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+			$4 = 3
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe401 "eLive") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+			$5 = 4
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe400 "veLive") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+			$6 = 5
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe3ff "oveLive") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+			$7 = 6
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe3fe "LoveLive") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+			$8 = 7
+			"LoveLive" reversed is "eviLevoL" (length 8)
+			[Inferior 1 (process 954) exited normally]
+			(gdb) run "LoveLive!"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/printRev/prev "LoveLive!"
+			9 8 7 6 5 4 3 2 1 0
+			What's on the stack now?
+
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe405 "!") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb) single_step
+		[BUG]	$9 = 32767										// should be "$9 = 0"
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe404 "e!") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+		[BUG]	$10 = 32768										// should be "$10 = 1"
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe403 "ve!") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+		[BUG]	$11 = 32769										// should be "$11 = 2"
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe402 "ive!") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+		[BUG]	$12 = 32770										// should be "$12 = 3"
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe401 "Live!") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+		[BUG]	$13 = 32771										// should be "$13 = 4"
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe400 "eLive!") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+		[BUG]	$14 = 32772										// should be "$14 = 5"
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe3ff "veLive!") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+		[BUG]	$15 = 32773										// should be "$15 = 6"
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe3fe "oveLive!") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+		[BUG]	$16 = 32774										// should be "$16 = 7"
+
+			Breakpoint 1, print_reverse (s=0x7fffffffe3fd "LoveLive!") at pr_buggy.c:48
+			48          printf ("%c", *s);
+			(gdb)
+		[BUG]	$17 = 32775										// should be "$17 = 8"
+		[BUG]	"LoveLive!" reversed is "!eviLevoL" (length 32776)					// should be "(length 9)"
+			[Inferior 1 (process 958) exited normally]
+	
+	Testing result:
+			Printed string length overflows when actual string length is 4, 5, 6, 9, 11, 14, or >=16. 
+			An overflowing number, 32767, appears at the last recursive call and before recursion returning. 
+	Bug mechanism:
+			Faulty return value at the start of recursion returning (zero-length string). 
+	Bug amendment:
+			(pr_buggy.c:41)		return rest;	-->	return 0;
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+[Program #2: Prime Number (primeNumber)]
+
+	$ ./primeNumber
+
+	Argument:	None
+	Functionality:	Prints all prime numbers smaller than 1000. 
+	Algorithm:	1. Iterate over candidates in [2, 1000); 
+			2. For a candidate NUM, iterate over divisors in [2, sqrt(N));
+			3. If a divisor D divides NUM evenly, assert that NUM is not prime and quit iteration;
+			4. Assert that NUM is prime if all divisors are iterated. 
+
+	Testing history:
+			(gdb) file primeNumber
+			Reading symbols from primeNumber...
+			(gdb) run
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/primeNumber/primeNumber
+			2 is prime.
+			3 is prime.
+		[BUG]	4 is prime.										// 4 = 2 * 2
+			5 is prime.
+			7 is prime.
+		[BUG]	9 is prime.										// 9 = 3 * 3
+			11 is prime.
+			13 is prime.
+			17 is prime.
+			19 is prime.
+			23 is prime.
+		[BUG]	25 is prime.										// 25 = 5 * 5
+			29 is prime.
+			31 is prime.
+			37 is prime.
+			41 is prime.
+			43 is prime.
+			47 is prime.
+		[BUG]	49 is prime.										// 49 = 7 * 7
+			53 is prime.
+			59 is prime.
+			61 is prime.
+			67 is prime.
+			71 is prime.
+			73 is prime.
+			79 is prime.
+			83 is prime.
+			89 is prime.
+			97 is prime.
+			101 is prime.
+			103 is prime.
+			107 is prime.
+			109 is prime.
+			113 is prime.
+		[BUG]	121 is prime.										// 121 = 11 * 11
+			127 is prime.
+			131 is prime.
+			137 is prime.
+			139 is prime.
+			149 is prime.
+			151 is prime.
+			157 is prime.
+			163 is prime.
+			167 is prime.
+		[BUG]	169 is prime.										// 169 = 13 * 13
+			173 is prime.
+			179 is prime.
+			181 is prime.
+			191 is prime.
+			193 is prime.
+			197 is prime.
+			199 is prime.
+			211 is prime.
+			223 is prime.
+			227 is prime.
+			229 is prime.
+			233 is prime.
+			239 is prime.
+			241 is prime.
+			251 is prime.
+			257 is prime.
+			263 is prime.
+			269 is prime.
+			271 is prime.
+			277 is prime.
+			281 is prime.
+			283 is prime.
+		[BUG]	289 is prime.										// 289 = 17 * 17
+			293 is prime.
+			307 is prime.
+			311 is prime.
+			313 is prime.
+			317 is prime.
+			331 is prime.
+			337 is prime.
+			347 is prime.
+			349 is prime.
+			353 is prime.
+			359 is prime.
+		[BUG]	361 is prime.										// 361 = 19 * 19
+			367 is prime.
+			373 is prime.
+			379 is prime.
+			383 is prime.
+			389 is prime.
+			397 is prime.
+			401 is prime.
+			409 is prime.
+			419 is prime.
+			421 is prime.
+			431 is prime.
+			433 is prime.
+			439 is prime.
+			443 is prime.
+			449 is prime.
+			457 is prime.
+			461 is prime.
+			463 is prime.
+			467 is prime.
+			479 is prime.
+			487 is prime.
+			491 is prime.
+			499 is prime.
+			503 is prime.
+			509 is prime.
+			521 is prime.
+			523 is prime.
+		[BUG]	529 is prime.										// 529 = 23 * 23
+			541 is prime.
+			547 is prime.
+			557 is prime.
+			563 is prime.
+			569 is prime.
+			571 is prime.
+			577 is prime.
+			587 is prime.
+			593 is prime.
+			599 is prime.
+			601 is prime.
+			607 is prime.
+			613 is prime.
+			617 is prime.
+			619 is prime.
+			631 is prime.
+			641 is prime.
+			643 is prime.
+			647 is prime.
+			653 is prime.
+			659 is prime.
+			661 is prime.
+			673 is prime.
+			677 is prime.
+			683 is prime.
+			691 is prime.
+			701 is prime.
+			709 is prime.
+			719 is prime.
+			727 is prime.
+			733 is prime.
+			739 is prime.
+			743 is prime.
+			751 is prime.
+			757 is prime.
+			761 is prime.
+			769 is prime.
+			773 is prime.
+			787 is prime.
+			797 is prime.
+			809 is prime.
+			811 is prime.
+			821 is prime.
+			823 is prime.
+			827 is prime.
+			829 is prime.
+			839 is prime.
+		[BUG]	841 is prime.										// 841 = 29 * 29
+			853 is prime.
+			857 is prime.
+			859 is prime.
+			863 is prime.
+			877 is prime.
+			881 is prime.
+			883 is prime.
+			887 is prime.
+			907 is prime.
+			911 is prime.
+			919 is prime.
+			929 is prime.
+			937 is prime.
+			941 is prime.
+			947 is prime.
+			953 is prime.
+		[BUG]	961 is prime.										// 961 = 31 * 31
+			967 is prime.
+			971 is prime.
+			977 is prime.
+			983 is prime.
+			991 is prime.
+			997 is prime.
+			[Inferior 1 (process 1657) exited normally]
+		
+	Tracing history:
+			(gdb) break divides_evenly
+			Breakpoint 1 at 0x1186: file primeNumber.c, line 63.
+			(gdb) run
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/primeNumber/primeNumber
+			2 is prime.										// 2 included in 0 steps
+			3 is prime.										// 3 included in 0 steps
+		[BUG]	4 is prime.										// 4 included in 0 steps
+														// should be excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=0, value=0) at primeNumber.c:63
+			63      {
+			(gdb) continue
+			Continuing.
+			5 is prime.										// 5 included in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=5) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 6 excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=6) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+			7 is prime.										// 7 included in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=7) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 8 excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=8) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+		[BUG]	9 is prime.										// 9 included in 1 step
+														// should be excluded in 2 steps
+
+			Breakpoint 1, divides_evenly (divisor=2, value=9) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 10 excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=10) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=2, value=11) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+			11 is prime.										// 11 included in 2 steps
+
+			Breakpoint 1, divides_evenly (divisor=3, value=11) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=2, value=12) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 12 excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=13) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+			13 is prime.										// 13 included in 2 steps
+
+			Breakpoint 1, divides_evenly (divisor=3, value=13) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=2, value=14) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 14 excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=15) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=3, value=15) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 15 excluded in 2 steps
+
+			Breakpoint 1, divides_evenly (divisor=2, value=16) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 16 excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=17) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=3, value=17) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+			17 is prime.										// 17 included in 3 steps
+
+			Breakpoint 1, divides_evenly (divisor=4, value=17) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=2, value=18) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 18 excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=19) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=3, value=19) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+			19 is prime.										// 19 included in 3 steps
+
+			Breakpoint 1, divides_evenly (divisor=4, value=19) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=2, value=20) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 20 excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=21) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=3, value=21) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 21 excluded in 2 steps
+
+			Breakpoint 1, divides_evenly (divisor=2, value=22) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 22 excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=23) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=3, value=23) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+			23 is prime.										// 23 included in 3 steps
+
+			Breakpoint 1, divides_evenly (divisor=4, value=23) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=2, value=24) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.										// 24 excluded in 1 step
+
+			Breakpoint 1, divides_evenly (divisor=2, value=25) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+
+			Breakpoint 1, divides_evenly (divisor=3, value=25) at primeNumber.c:63
+			63      {
+			(gdb)
+			Continuing.
+		[BUG]	25 is prime.										// 25 included in 2 steps
+														// should be excluded in 3 steps
+
+	Testing result:
+			The list of prime numbers also include the square of actual prime numbers, 
+			which SHOULD HAVE BEEN excluded if the test is done for another step. 
+	(Possible) bug mechanism:
+			Check range in "is_prime" adjusted from [2, num-1] to [2, sqrt(num)), 
+			which neglects the case in which divides_evenly(sqrt(num), num) == 1. 
+	(Possible) bug amendment:
+			Alter the check range to [2, sqrt(num)]. 
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+[Program #3: Heap Sorting (sort)]
+
+	$ ./sort <input_file>
+
+	Argument:	<input_file>	File in the following format:
+						N
+						arr[0] arr[1] ... arr[N-1]
+					Here, "arr" contains the numbers to be sorted. 
+					N refers to the length of "arr". 
+	Functionality:	Prints the sorted "arr". 
+	Algorithm:	1. Initialize heap: 	construct the numbers into a tree; 
+			2. Maximize heap: 	starting from the bottom of the tree, scanning from right to left, 
+						swap a pair of parent-child nodes if the child is larger than the parent; 
+			3. Perform sorting:	swap the root node and the "last" node (indicated by a pointer, 
+						starting from the bottom right), decrement the pointer, and return to Step 2. 
+
+	Testing history:
+			/* Below is the content of the test point used that produces the CORRECT result: "test3.txt"
+			 *
+			 * 18
+			 * 695822 254798 1779 7721 665580 9808 5425 1298 583679 4622 8017 9825 66557796 9665 803225 225508 441388 7798
+			 */
+			
+			(gdb) file sort
+			Reading symbols from sort...
+			(gdb) run "test3.txt"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/sort/sort "test3.txt"
+			1298 1779 4622 5425 7721 7798 8017 9665 9808 9825 225508 254798 441388 583679 665580 695822 803225 66557796
+			[Inferior 1 (process 1065) exited normally]
+			(gdb) run "test3.txt"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/sort/sort "test3.txt"
+			1298 1779 4622 5425 7721 7798 8017 9665 9808 9825 225508 254798 441388 583679 665580 695822 803225 66557796
+			[Inferior 1 (process 1069) exited normally]
+			(gdb) run "test3.txt"
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/sort/sort "test3.txt"
+			1298 1779 4622 5425 7721 7798 8017 9665 9808 9825 225508 254798 441388 583679 665580 695822 803225 66557796
+			[Inferior 1 (process 1070) exited normally]
+			
+			/* Below is the content of the test point used that produces the FAULTY result: "test6.txt"
+			 *
+			 * 50
+			 * 695 -822 254 -798 1779 -7721 665 -580 9808 -5425
+			 * 1298 -583 679 0 0 0 0 0 0 0
+			 * 0 0 0 0 0 0 0 0 0 0
+			 * 0 0 0 0 0 0 0 -4622 8017 -9825
+			 * 6655 -7796 9665 -803 225 -225 508 -441 388 -7798
+			 *
+			 * Also note that repeated commands of 'run "test6.txt"' are omitted; identical outputs are abbreviated. 
+			 */
+			
+			(gdb) run "test6.txt" [for 50 times]
+			Starting program: /home/allen_heartcore/Documents/ziyuanc3/Drafting/mp7/sort/sort "test6.txt"
+		[BUG]	A B A A C D A A E A
+		[BUG]	A A A A D A A A A A
+		[BUG]	D A A A A A A A A D
+		[BUG]	A A A A D D A A F A
+		[BUG]	A A D D A A A A A A
+
+			[Symbols of abbreviated outputs]
+			A. (DesiredOutput) -9825 -7798 -7796 -7721 -5425 -4622 -822 -803 -798 -583 -580 -441 -225 0 0 0 0 0 0 0 0 0 0 0 0 \
+						0 0 0 0 0 0 0 0 0 0 0 0 225 254 388 508 665 679 695 1298 1779 6655 8017 9665 9808
+			B. (9808 -> -5425) -9825 -7798 -7796 -7721 -5425 -5425 -4622 -822 -803 -798 -583 -580 -441 -225 0 0 0 0 0 0 0 0 0 \
+						0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 225 254 388 508 665 679 695 1298 1779 6655 8017 9665
+			C. (9808 ->  -225) -9825 -7798 -7796 -7721 -5425 -4622 -822 -803 -798 -583 -580 -441 -225 -225 0 0 0 0 0 0 0 0 0 0 0 \
+						0 0 0 0 0 0 0 0 0 0 0 0 0 225 254 388 508 665 679 695 1298 1779 6655 8017 9665
+			D. (9808 ->     0) -9825 -7798 -7796 -7721 -5425 -4622 -822 -803 -798 -583 -580 -441 -225 0 0 0 0 0 0 0 0 0 0 0 0 \
+						0 0 0 0 0 0 0 0 0 0 0 0 0 225 254 388 508 665 679 695 1298 1779 6655 8017 9665
+			E. (9808 ->   508) -9825 -7798 -7796 -7721 -5425 -4622 -822 -803 -798 -583 -580 -441 -225 0 0 0 0 0 0 0 0 0 0 0 0 \
+						0 0 0 0 0 0 0 0 0 0 0 0 225 254 388 508 508 665 679 695 1298 1779 6655 8017 9665
+			F. (9808 ->  8017) -9825 -7798 -7796 -7721 -5425 -4622 -822 -803 -798 -583 -580 -441 -225 0 0 0 0 0 0 0 0 0 0 0 0 \
+						0 0 0 0 0 0 0 0 0 0 0 0 225 254 388 508 665 679 695 1298 1779 6655 8017 8017 9665
+
+	Tracing history:
+			(Omitted due to oversized input and unstable behavior)
+	
+	Testing result:
+			Output is unstable; that is, repeatedly calling the function yields varying results. 
+	(Possible) bug mechanism:
+			Though strange at first sight, it is highly probable that MEMORY ISSUES are involved. 
+			Either there lacks a "free()" command freeing array space before the program terminates, 
+			or the input size of 50 integers causes the array to overflow "into itself" and produce self-overwriting behaviors. 
+			This bug only arises in cases with sufficiently many integers to be sorted, among which are sufficiently many ZEROS. 
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+###### END OF REPORT ######
