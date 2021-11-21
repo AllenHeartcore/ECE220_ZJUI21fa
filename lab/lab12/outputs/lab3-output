@@ -1,0 +1,16 @@
+block 0000 (from x3000): 3 instructions, 1 incoming
+      3000 3001 3002 
+      ENDS IN JSR(R)
+      next block: 1
+block 0001 (from x3000): 1 instructions, 1 incoming
+      3003 
+      ENDS IN HALT
+analyzed code starting at 3000:
+   no warnings to report
+
+block 0002 (from x3004): 1 instructions, 0 incoming
+      3004 
+      ENDS IN RET
+analyzed subroutine starting at 3004:
+   no warnings to report
+
