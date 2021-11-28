@@ -123,6 +123,7 @@ int32_t dijkstra (graph_t* g, heap_t* h, vertex_set_t* src, vertex_set_t* dest, 
 	for (iter_set = h->n_elts - 1; iter_set >= 0; iter_set--) heapify_downward(g, h, iter_set);				// Build the heap
 	while (h->n_elts > 0) {
 		heap_swap(g, h, 0, --h->n_elts);										// Pop 1 element
+		heapify_downward(g, h, 0);
 		examiner = hid2gid(h->n_elts);
 		for (iter_neighbor = 0; iter_neighbor < gid2vtx(examiner).n_neighbors; iter_neighbor++) {			// Go through neighbors
 			examinee = gid2vtx(examiner).neighbor[iter_neighbor];
@@ -130,10 +131,9 @@ int32_t dijkstra (graph_t* g, heap_t* h, vertex_set_t* src, vertex_set_t* dest, 
 			if (dist_proposal < gid2dist(examinee)) {
 				gid2dist(examinee) = dist_proposal;								// Update to a better dist
 				gid2vtx(examinee).pred = examiner;								// Record pred. vertex
+				heapify_upward(g, h, gid2hid(examinee));							// Push 1 element
 			}
 		}
-		for (int32_t iter_hid = h->n_elts - 1; iter_hid >= 0; iter_hid--)
-			if (hid2dist(iter_hid) != MY_INFINITY) heapify_upward(g, h, iter_hid);					// Rebuild the heap
 	}
 	path->tot_dist = MY_INFINITY;
 	for (iter_set = 0; iter_set < dest->count; iter_set++)									// Go through dest points
