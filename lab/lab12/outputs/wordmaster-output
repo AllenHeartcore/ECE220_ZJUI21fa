@@ -1,0 +1,421 @@
+block 0000 (from x3000): 2 instructions, 1 incoming
+      3000 3001 
+      ENDS IN TRAP
+      next block: 1
+block 0001 (from x3000): 2 instructions, 1 incoming
+      3002 3003 
+      ENDS IN JSR(R)
+      next block: 2
+block 0002 (from x3000): 2 instructions, 1 incoming
+      3004 3005 
+      ENDS IN JSR(R)
+      next block: 3
+block 0003 (from x3000): 1 instructions, 1 incoming
+      3006 
+      ENDS IN JSR(R)
+      next block: 4
+block 0004 (from x3000): 4 instructions, 1 incoming
+      3007 3008 3009 300A 
+      ENDS IN TRAP
+      next block: 5
+block 0005 (from x3000): 1 instructions, 1 incoming
+      300B 
+      ENDS IN HALT
+analyzed code starting at 3000:
+   no warnings to report
+
+block 0006 (from x33BE): 1 instructions, 1 incoming
+      33BE 
+      next block: 7
+block 0007 (from x33BE): 1 instructions, 2 incoming
+      33BF 
+      ENDS IN JSR(R)
+      next block: 8
+block 0008 (from x33BE): 1 instructions, 2 incoming
+      33C0 
+      ENDS IN JSR(R)
+      next block: 9
+block 0009 (from x33BE): 1 instructions, 1 incoming
+      33C1 
+      ENDS IN JSR(R)
+      next block: 10
+block 0010 (from x33BE): 2 instructions, 1 incoming
+      33C2 33C3 
+      ENDS IN BRANCH
+      next blocks: 11 13
+block 0011 (from x33BE): 2 instructions, 1 incoming
+      33C4 33C5 
+      ENDS IN BRANCH
+      next block: 12
+block 0012 (from x33BE): 2 instructions, 3 incoming
+      33D1 33D2 
+      ENDS IN RET
+block 0013 (from x33BE): 3 instructions, 1 incoming
+      33C6 33C7 33C8 
+      ENDS IN BRANCH
+      next blocks: 14 15
+block 0014 (from x33BE): 3 instructions, 1 incoming
+      33C9 33CA 33CB 
+      ENDS IN BRANCH
+      next block: 12
+block 0015 (from x33BE): 2 instructions, 1 incoming
+      33CC 33CD 
+      ENDS IN BRANCH
+      next blocks: 16 8
+block 0016 (from x33BE): 1 instructions, 1 incoming
+      33CE 
+      ENDS IN BRANCH
+      next blocks: 17 7
+block 0017 (from x33BE): 2 instructions, 1 incoming
+      33CF 33D0 
+      next block: 12
+analyzed subroutine starting at 33BE:
+   no warnings to report
+
+block 0018 (from x33D5): 3 instructions, 1 incoming
+      33D5 33D6 33D7 
+      ENDS IN TRAP
+      next block: 19
+block 0019 (from x33D5): 2 instructions, 1 incoming
+      33D8 33D9 
+      next block: 20
+block 0020 (from x33D5): 3 instructions, 2 incoming
+      33DA 33DB 33DC 
+      ENDS IN BRANCH
+      next blocks: 21 20
+block 0021 (from x33D5): 3 instructions, 1 incoming
+      33DD 33DE 33DF 
+      ENDS IN TRAP
+      next block: 22
+block 0022 (from x33D5): 3 instructions, 1 incoming
+      33E0 33E1 33E2 
+      ENDS IN TRAP
+      next block: 23
+block 0023 (from x33D5): 2 instructions, 1 incoming
+      33E3 33E4 
+      ENDS IN TRAP
+      next block: 24
+block 0024 (from x33D5): 4 instructions, 1 incoming
+      33E5 33E6 33E7 33E8 
+      next block: 25
+block 0025 (from x33D5): 2 instructions, 2 incoming
+      33E9 33EA 
+      ENDS IN BRANCH
+      next blocks: 26 31
+block 0026 (from x33D5): 2 instructions, 1 incoming
+      33EB 33EC 
+      ENDS IN BRANCH
+      next blocks: 27 28
+block 0027 (from x33D5): 1 instructions, 1 incoming
+      33ED 
+      next block: 28
+block 0028 (from x33D5): 1 instructions, 2 incoming
+      33EE 
+      ENDS IN TRAP
+      next block: 29
+block 0029 (from x33D5): 2 instructions, 1 incoming
+      33EF 33F0 
+      ENDS IN TRAP
+      next block: 30
+block 0030 (from x33D5): 3 instructions, 1 incoming
+      33F1 33F2 33F3 
+      ENDS IN BRANCH
+      next block: 25
+block 0031 (from x33D5): 2 instructions, 1 incoming
+      33F4 33F5 
+      ENDS IN TRAP
+      next block: 32
+block 0032 (from x33D5): 5 instructions, 1 incoming
+      33F6 33F7 33F8 33F9 33FA 
+      next block: 33
+block 0033 (from x33D5): 2 instructions, 2 incoming
+      33FB 33FC 
+      ENDS IN BRANCH
+      next blocks: 34 36
+block 0034 (from x33D5): 2 instructions, 1 incoming
+      33FD 33FE 
+      ENDS IN TRAP
+      next block: 35
+block 0035 (from x33D5): 2 instructions, 1 incoming
+      33FF 3400 
+      ENDS IN TRAP
+      next block: 36
+block 0036 (from x33D5): 4 instructions, 2 incoming
+      3401 3402 3403 3404 
+      ENDS IN BRANCH
+      next blocks: 37 33
+block 0037 (from x33D5): 2 instructions, 1 incoming
+      3405 3406 
+      ENDS IN TRAP
+      next block: 38
+block 0038 (from x33D5): 4 instructions, 1 incoming
+      3407 3408 3409 340A 
+      ENDS IN RET
+analyzed subroutine starting at 33D5:
+   no warnings to report
+
+block 0039 (from x3498): 4 instructions, 1 incoming
+      3498 3499 349A 349B 
+      next block: 40
+block 0040 (from x3498): 4 instructions, 2 incoming
+      349C 349D 349E 349F 
+      ENDS IN BRANCH
+      next blocks: 41 40
+block 0041 (from x3498): 2 instructions, 1 incoming
+      34A0 34A1 
+      next block: 42
+block 0042 (from x3498): 4 instructions, 2 incoming
+      34A2 34A3 34A4 34A5 
+      ENDS IN BRANCH
+      next blocks: 43 42
+block 0043 (from x3498): 1 instructions, 1 incoming
+      34A6 
+      ENDS IN JSR(R)
+      next block: 44
+block 0044 (from x3498): 2 instructions, 1 incoming
+      34A7 34A8 
+      ENDS IN JSR(R)
+      next block: 45
+block 0045 (from x3498): 5 instructions, 1 incoming
+      34A9 34AA 34AB 34AC 34AD 
+      next block: 46
+block 0046 (from x3498): 2 instructions, 2 incoming
+      34AE 34AF 
+      ENDS IN BRANCH
+      next blocks: 47 48
+block 0047 (from x3498): 3 instructions, 1 incoming
+      34B0 34B1 34B2 
+      ENDS IN BRANCH
+      next block: 46
+block 0048 (from x3498): 3 instructions, 1 incoming
+      34B3 34B4 34B5 
+      ENDS IN RET
+analyzed subroutine starting at 3498:
+   no warnings to report
+
+block 0049 (from x34FC): 1 instructions, 1 incoming
+      34FC 
+      next block: 50
+block 0050 (from x34FC): 1 instructions, 4 incoming
+      34FD 
+      ENDS IN TRAP
+      next block: 51
+block 0051 (from x34FC): 3 instructions, 1 incoming
+      34FE 34FF 3500 
+      ENDS IN BRANCH
+      next blocks: 52 54
+block 0052 (from x34FC): 3 instructions, 1 incoming
+      3501 3502 3503 
+      ENDS IN BRANCH
+      next block: 53
+block 0053 (from x34FC): 2 instructions, 3 incoming
+      3532 3533 
+      ENDS IN RET
+block 0054 (from x34FC): 3 instructions, 1 incoming
+      3504 3505 3506 
+      ENDS IN BRANCH
+      next blocks: 55 50
+block 0055 (from x34FC): 3 instructions, 1 incoming
+      3507 3508 3509 
+      ENDS IN BRANCH
+      next blocks: 56 50
+block 0056 (from x34FC): 4 instructions, 1 incoming
+      350A 350B 350C 350D 
+      ENDS IN BRANCH
+      next blocks: 57 50
+block 0057 (from x34FC): 7 instructions, 1 incoming
+      350E 350F 3510 3511 3512 3513 3514 
+      next block: 58
+block 0058 (from x34FC): 2 instructions, 2 incoming
+      3515 3516 
+      ENDS IN BRANCH
+      next blocks: 59 62
+block 0059 (from x34FC): 2 instructions, 1 incoming
+      3517 3518 
+      ENDS IN BRANCH
+      next blocks: 60 61
+block 0060 (from x34FC): 3 instructions, 1 incoming
+      3519 351A 351B 
+      next block: 61
+block 0061 (from x34FC): 3 instructions, 2 incoming
+      351C 351D 351E 
+      ENDS IN BRANCH
+      next block: 58
+block 0062 (from x34FC): 2 instructions, 1 incoming
+      351F 3520 
+      ENDS IN BRANCH
+      next blocks: 63 67
+block 0063 (from x34FC): 6 instructions, 1 incoming
+      3521 3522 3523 3524 3525 3526 
+      ENDS IN BRANCH
+      next blocks: 64 66
+block 0064 (from x34FC): 4 instructions, 1 incoming
+      3527 3528 3529 352A 
+      ENDS IN JSR(R)
+      next block: 65
+block 0065 (from x34FC): 3 instructions, 1 incoming
+      352B 352C 352D 
+      ENDS IN BRANCH
+      next block: 53
+block 0066 (from x34FC): 1 instructions, 2 incoming
+      3531 
+      next block: 53
+block 0067 (from x34FC): 3 instructions, 1 incoming
+      352E 352F 3530 
+      next block: 66
+analyzed subroutine starting at 34FC:
+   no warnings to report
+
+block 0068 (from x3548): 6 instructions, 1 incoming
+      3548 3549 354A 354B 354C 354D 
+      ENDS IN BRANCH
+      next blocks: 69 73
+block 0069 (from x3548): 1 instructions, 1 incoming
+      354E 
+      ENDS IN BRANCH
+      next blocks: 70 84
+block 0070 (from x3548): 3 instructions, 1 incoming
+      354F 3550 3551 
+      ENDS IN BRANCH
+      next blocks: 71 73
+block 0071 (from x3548): 3 instructions, 1 incoming
+      3552 3553 3554 
+      ENDS IN BRANCH
+      next block: 72
+block 0072 (from x3548): 5 instructions, 3 incoming
+      3576 3577 3578 3579 357A 
+      ENDS IN RET
+block 0073 (from x3548): 2 instructions, 2 incoming
+      355B 355C 
+      ENDS IN BRANCH
+      next blocks: 74 79
+block 0074 (from x3548): 1 instructions, 2 incoming
+      355D 
+      next block: 75
+block 0075 (from x3548): 3 instructions, 2 incoming
+      355E 355F 3560 
+      ENDS IN BRANCH
+      next blocks: 76 78
+block 0076 (from x3548): 2 instructions, 1 incoming
+      3561 3562 
+      ENDS IN BRANCH
+      next blocks: 77 75
+block 0077 (from x3548): 2 instructions, 1 incoming
+      3563 3564 
+      ENDS IN BRANCH
+      next block: 74
+block 0078 (from x3548): 1 instructions, 1 incoming
+      3565 
+      next block: 79
+block 0079 (from x3548): 4 instructions, 3 incoming
+      3566 3567 3568 3569 
+      ENDS IN BRANCH
+      next blocks: 80 72
+block 0080 (from x3548): 1 instructions, 1 incoming
+      356A 
+      next block: 81
+block 0081 (from x3548): 3 instructions, 2 incoming
+      356B 356C 356D 
+      ENDS IN BRANCH
+      next blocks: 82 83
+block 0082 (from x3548): 4 instructions, 1 incoming
+      356E 356F 3570 3571 
+      ENDS IN BRANCH
+      next blocks: 83 81
+block 0083 (from x3548): 4 instructions, 2 incoming
+      3572 3573 3574 3575 
+      ENDS IN BRANCH
+      next block: 79
+block 0084 (from x3548): 3 instructions, 1 incoming
+      3555 3556 3557 
+      ENDS IN TRAP
+      next block: 85
+block 0085 (from x3548): 3 instructions, 1 incoming
+      3558 3559 355A 
+      ENDS IN BRANCH
+      next block: 72
+analyzed subroutine starting at 3548:
+   no warnings to report
+
+block 0086 (from x35A0): 3 instructions, 1 incoming
+      35A0 35A1 35A2 
+      ENDS IN TRAP
+      next block: 87
+block 0087 (from x35A0): 2 instructions, 1 incoming
+      35A3 35A4 
+      next block: 88
+block 0088 (from x35A0): 3 instructions, 2 incoming
+      35A5 35A6 35A7 
+      ENDS IN BRANCH
+      next blocks: 89 88
+block 0089 (from x35A0): 3 instructions, 1 incoming
+      35A8 35A9 35AA 
+      ENDS IN RET
+analyzed subroutine starting at 35A0:
+   no warnings to report
+
+block 0090 (from x35AB): 28 instructions, 0 incoming
+      35AB 35AC 35AD 35AE 35AF 35B0 35B1 35B2 35B3 35B4 35B5 35B6 35B7 35B8 35B9 35BA 35BB 35BC 35BD 35BE 35BF 35C0 35C1 35C2 35C3 35C4 35C5 35C6 
+      ENDS IN JSR(R)
+      next block: 91
+block 0091 (from x35AB): 3 instructions, 1 incoming
+      35C7 35C8 35C9 
+      ENDS IN RET
+analyzed subroutine starting at 35AB:
+   no warnings to report
+
+block 0092 (from x35E8): 9 instructions, 1 incoming
+      35E8 35E9 35EA 35EB 35EC 35ED 35EE 35EF 35F0 
+      next block: 93
+block 0093 (from x35E8): 2 instructions, 2 incoming
+      35F1 35F2 
+      ENDS IN BRANCH
+      next blocks: 94 99
+block 0094 (from x35E8): 4 instructions, 1 incoming
+      35F3 35F4 35F5 35F6 
+      next block: 95
+block 0095 (from x35E8): 4 instructions, 2 incoming
+      35F7 35F8 35F9 35FA 
+      ENDS IN BRANCH
+      next blocks: 96 95
+block 0096 (from x35E8): 4 instructions, 1 incoming
+      35FB 35FC 35FD 35FE 
+      ENDS IN BRANCH
+      next blocks: 97 98
+block 0097 (from x35E8): 2 instructions, 1 incoming
+      35FF 3600 
+      next block: 98
+block 0098 (from x35E8): 3 instructions, 2 incoming
+      3601 3602 3603 
+      ENDS IN BRANCH
+      next blocks: 99 93
+block 0099 (from x35E8): 7 instructions, 2 incoming
+      3604 3605 3606 3607 3608 3609 360A 
+      ENDS IN RET
+analyzed subroutine starting at 35E8:
+   no warnings to report
+
+block 0100 (from x3539): 4 instructions, 1 incoming
+      3539 353A 353B 353C 
+      next block: 101
+block 0101 (from x3539): 2 instructions, 2 incoming
+      353D 353E 
+      ENDS IN BRANCH
+      next blocks: 102 105
+block 0102 (from x3539): 2 instructions, 1 incoming
+      353F 3540 
+      ENDS IN BRANCH
+      next block: 103
+block 0103 (from x3539): 2 instructions, 2 incoming
+      3543 3544 
+      ENDS IN BRANCH
+      next blocks: 104 101
+block 0104 (from x3539): 2 instructions, 1 incoming
+      3545 3546 
+      ENDS IN RET
+block 0105 (from x3539): 2 instructions, 1 incoming
+      3541 3542 
+      next block: 103
+analyzed subroutine starting at 3539:
+   no warnings to report
+

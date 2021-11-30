@@ -1,0 +1,919 @@
+
+	; like most LC-3 programs, this one starts at address x3000
+	.ORIG x3000
+
+	; call the FIND_SECRET function; you can change the bit used
+	; (the value of R3), or you can add more calls so as to print 
+	; more than one string with one run
+
+	AND R3,R3,#0	; set R3 to 0
+	ADD R3,R3,#12	; add the bit to try--here, it's bit 5
+	JSR FIND_SECRET	; print the secret ... maybe
+	HALT		; all done!
+
+FIND_SECRET
+	; your code goes here!
+	
+	; first, decide how you want to use registers to keep track
+	; of information in the subroutine; don't forget that traps
+	; change R7
+	
+	RET
+
+	; add data here if you need to do so
+
+SECRET	; here are the secret strings; don't change these
+
+	.STRINGZ "n"
+	.FILL x606E
+	.STRINGZ "r"
+	.FILL xE9C3
+	.STRINGZ "i"
+	.FILL x4FEF
+	.STRINGZ "e a"
+	.FILL xCD66
+	.STRINGZ "s"
+	.FILL x864B
+	.STRINGZ "a"
+	.FILL x25E2
+	.STRINGZ "is"
+	.FILL xC89B
+	.STRINGZ "we"
+	.FILL x4AF5
+	.STRINGZ "s"
+	.FILL xE774
+	.STRINGZ "s "
+	.FILL xED98
+	.STRINGZ "y"
+	.FILL x2673
+	.STRINGZ "t"
+	.FILL x4C72
+	.STRINGZ "n"
+	.FILL x6B26
+	.STRINGZ "s"
+	.FILL x6959
+	.STRINGZ "y"
+	.FILL x600D
+	.STRINGZ "h"
+	.FILL xC70C
+	.STRINGZ " "
+	.FILL x8493
+	.STRINGZ "an"
+	.FILL x0663
+	.STRINGZ "t"
+	.FILL xE3C4
+	.STRINGZ "t"
+	.FILL x05C4
+	.STRINGZ "n"
+	.FILL x2FE1
+	.STRINGZ "s"
+	.FILL x42DA
+	.STRINGZ " "
+	.FILL x892F
+	.STRINGZ "r"
+	.FILL x265F
+	.STRINGZ "s"
+	.FILL xCE1C
+	.STRINGZ "we"
+	.FILL xCC98
+	.STRINGZ "st"
+	.FILL x4BC0
+	.STRINGZ "s"
+	.FILL xE7AF
+	.STRINGZ "in"
+	.FILL xE6FE
+	.STRINGZ "r"
+	.FILL x20C7
+	.STRINGZ "s"
+	.FILL xEC13
+	.STRINGZ "a"
+	.FILL x4813
+	.STRINGZ "o"
+	.FILL x6D35
+	.STRINGZ "o"
+	.FILL x8AE1
+	.STRINGZ "r"
+	.FILL x4E89
+	.STRINGZ "r."
+	.FILL xAA03
+	.STRINGZ "pa"
+	.FILL xC6A1
+	.STRINGZ " "
+	.FILL x454A
+	.STRINGZ "p"
+	.FILL xEC75
+	.STRINGZ "th"
+	.FILL x2A73
+	.STRINGZ " "
+	.FILL x0253
+	.STRINGZ "in"
+	.FILL xC6C5
+	.STRINGZ "n"
+	.FILL xAC5A
+	.STRINGZ "sw"
+	.FILL xE944
+	.STRINGZ " "
+	.FILL xA2D5
+	.STRINGZ "th"
+	.FILL x03DC
+	.STRINGZ "e"
+	.FILL x6C18
+	.STRINGZ "sw"
+	.FILL xA2B2
+	.STRINGZ " a"
+	.FILL x010A
+	.STRINGZ " "
+	.FILL x63C8
+	.STRINGZ "s"
+	.FILL x885C
+	.STRINGZ " "
+	.FILL x2964
+	.STRINGZ "t p"
+	.FILL x03BE
+	.STRINGZ "e "
+	.FILL xC377
+	.STRINGZ "t"
+	.FILL x05C5
+	.STRINGZ "r"
+	.FILL x4778
+	.STRINGZ " "
+	.FILL xCE1D
+	.STRINGZ "o"
+	.FILL x404E
+	.STRINGZ "n"
+	.FILL x2CD4
+	.STRINGZ "t "
+	.FILL x88E2
+	.STRINGZ "f"
+	.FILL x0D1C
+	.STRINGZ "r"
+	.FILL xE578
+	.STRINGZ "C"
+	.FILL xF096
+	.STRINGZ "o"
+	.FILL xE46B
+	.STRINGZ " t"
+	.FILL x88F2
+	.STRINGZ "ans"
+	.FILL x2833
+	.STRINGZ "s"
+	.FILL x6236
+	.STRINGZ "s"
+	.FILL x032C
+	.STRINGZ "S"
+	.FILL xCCD3
+	.STRINGZ "s"
+	.FILL x0850
+	.STRINGZ " "
+	.FILL x2291
+	.STRINGZ "o"
+	.FILL x6B11
+	.STRINGZ "on"
+	.FILL x14DC
+	.STRINGZ "y"
+	.FILL x03F0
+	.STRINGZ "r"
+	.FILL xA6F1
+	.STRINGZ "o"
+	.FILL x27C0
+	.STRINGZ "a"
+	.FILL x20D1
+	.STRINGZ "g"
+	.FILL x0BCC
+	.STRINGZ "s"
+	.FILL x6385
+	.STRINGZ "g"
+	.FILL xF118
+	.STRINGZ "p"
+	.FILL xE7E0
+	.STRINGZ "S"
+	.FILL x68F5
+	.STRINGZ " "
+	.FILL x8056
+	.STRINGZ " "
+	.FILL x607E
+	.STRINGZ "tr"
+	.FILL x6733
+	.STRINGZ "r"
+	.FILL x09CE
+	.STRINGZ "r"
+	.FILL x29CC
+	.STRINGZ "o"
+	.FILL x8C4B
+	.STRINGZ "t"
+	.FILL x6610
+	.STRINGZ "n"
+	.FILL x27BC
+	.STRINGZ "r"
+	.FILL xA71D
+	.STRINGZ "th"
+	.FILL xAB17
+	.STRINGZ "t"
+	.FILL x4131
+	.STRINGZ " "
+	.FILL x6CD0
+	.STRINGZ "So"
+	.FILL x8C7E
+	.STRINGZ "b"
+	.FILL xE780
+	.STRINGZ "bu"
+	.FILL x0F85
+	.STRINGZ " "
+	.FILL x8263
+	.STRINGZ "bu"
+	.FILL x8423
+	.STRINGZ "u"
+	.FILL x266D
+	.STRINGZ " "
+	.FILL xAD3F
+	.STRINGZ "r"
+	.FILL xDABB
+	.STRINGZ "st"
+	.FILL x805F
+	.STRINGZ "o"
+	.FILL x0AF7
+	.STRINGZ " st"
+	.FILL x4D9E
+	.STRINGZ ","
+	.FILL x49AB
+	.STRINGZ "is"
+	.FILL x62C5
+	.STRINGZ "g"
+	.FILL x224A
+	.STRINGZ "or"
+	.FILL x001C
+	.STRINGZ "an"
+	.FILL xED1E
+	.STRINGZ "r"
+	.FILL xA978
+	.STRINGZ "h"
+	.FILL x8955
+	.STRINGZ "h"
+	.FILL x23D2
+	.STRINGZ "a"
+	.FILL x399F
+	.STRINGZ "r"
+	.FILL xCDE7
+	.STRINGZ "y"
+	.FILL x89BA
+	.STRINGZ " "
+	.FILL xE213
+	.STRINGZ "sw"
+	.FILL x63DB
+	.STRINGZ " "
+	.FILL x8583
+	.STRINGZ " i"
+	.FILL x8E54
+	.STRINGZ "b"
+	.FILL x26A2
+	.STRINGZ "y"
+	.FILL xE3C1
+	.STRINGZ "of"
+	.FILL x678F
+	.STRINGZ "p"
+	.FILL x4A56
+	.STRINGZ "sw"
+	.FILL x61A7
+	.STRINGZ " s"
+	.FILL xE21B
+	.STRINGZ "r"
+	.FILL x8180
+	.STRINGZ " "
+	.FILL x091F
+	.STRINGZ "r."
+	.FILL xACDF
+	.STRINGZ "n"
+	.FILL x6110
+	.STRINGZ "a"
+	.FILL x0E2D
+	.STRINGZ " "
+	.FILL xC015
+	.STRINGZ "t"
+	.FILL x50CB
+	.STRINGZ "a"
+	.FILL xAD3E
+	.STRINGZ " th"
+	.FILL x834B
+	.STRINGZ "f"
+	.FILL x482B
+	.STRINGZ "u"
+	.FILL x955F
+	.STRINGZ " "
+	.FILL x2FFA
+	.STRINGZ "t "
+	.FILL xA764
+	.STRINGZ "f "
+	.FILL x0D25
+	.STRINGZ "t "
+	.FILL x2AB4
+	.STRINGZ "i"
+	.FILL x21F8
+	.STRINGZ "l"
+	.FILL x18AE
+	.STRINGZ "o"
+	.FILL x4FDF
+	.STRINGZ "b"
+	.FILL xA990
+	.STRINGZ "y"
+	.FILL x2687
+	.STRINGZ "s "
+	.FILL x8CBC
+	.STRINGZ "t"
+	.FILL x8D02
+	.STRINGZ "t"
+	.FILL xC16B
+	.STRINGZ "t"
+	.FILL x8541
+	.STRINGZ "tr"
+	.FILL x24B5
+	.STRINGZ "r"
+	.FILL xE9AB
+	.STRINGZ " "
+	.FILL x6824
+	.STRINGZ "i"
+	.FILL x031B
+	.STRINGZ "r"
+	.FILL xA684
+	.STRINGZ ","
+	.FILL x2099
+	.STRINGZ "of"
+	.FILL xCB02
+	.STRINGZ " n"
+	.FILL x8546
+	.STRINGZ "ns"
+	.FILL x62C0
+	.STRINGZ "y,"
+	.FILL xA1A9
+	.STRINGZ " "
+	.FILL x6709
+	.STRINGZ "S"
+	.FILL x226E
+	.STRINGZ " "
+	.FILL x09BC
+	.STRINGZ "."
+	.FILL xAE8C
+	.STRINGZ "r"
+	.FILL x4851
+	.STRINGZ " i"
+	.FILL x0F30
+	.STRINGZ "e"
+	.FILL x658D
+	.STRINGZ "a"
+	.FILL x4134
+	.STRINGZ " p"
+	.FILL xC057
+	.STRINGZ "e"
+	.FILL x6991
+	.STRINGZ "a"
+	.FILL xBB9D
+	.STRINGZ "e"
+	.FILL x0BF3
+	.STRINGZ "b"
+	.FILL x2BA5
+	.STRINGZ "r"
+	.FILL x20C8
+	.STRINGZ "y"
+	.FILL x4D39
+	.STRINGZ " "
+	.FILL x4A57
+	.STRINGZ "e"
+	.FILL x0B05
+	.STRINGZ "t"
+	.FILL x8ECE
+	.STRINGZ "y"
+	.FILL x443B
+	.STRINGZ "bu"
+	.FILL xA6C5
+	.STRINGZ "t"
+	.FILL x136E
+	.STRINGZ "t"
+	.FILL x2778
+	.STRINGZ " "
+	.FILL xABB4
+	.STRINGZ " "
+	.FILL x4434
+	.STRINGZ "p"
+	.FILL xED16
+	.STRINGZ "ns"
+	.FILL x07C2
+	.STRINGZ " "
+	.FILL x8B00
+	.STRINGZ "y,"
+	.FILL x83F8
+	.STRINGZ "a"
+	.FILL xC92B
+	.STRINGZ "i"
+	.FILL xB807
+	.STRINGZ "g"
+	.FILL xE2EA
+	.STRINGZ "r"
+	.FILL x0B81
+	.STRINGZ "t "
+	.FILL xAFEA
+	.STRINGZ "s"
+	.FILL x623C
+	.STRINGZ "t "
+	.FILL xE7FA
+	.STRINGZ " a"
+	.FILL x01D1
+	.STRINGZ "y"
+	.FILL xA5D0
+	.STRINGZ "u"
+	.FILL x2A4A
+	.STRINGZ " "
+	.FILL x84F3
+	.STRINGZ "ry"
+	.FILL x86E1
+	.STRINGZ "ons"
+	.FILL x58FC
+	.STRINGZ " i"
+	.FILL x40A9
+	.STRINGZ "f "
+	.FILL x669E
+	.STRINGZ "hi"
+	.FILL x059F
+	.STRINGZ "ar"
+	.FILL xEEEC
+	.STRINGZ "t"
+	.FILL x81A4
+	.STRINGZ "rt"
+	.FILL x63BE
+	.STRINGZ " "
+	.FILL x8BE9
+	.STRINGZ ", "
+	.FILL xE18C
+	.STRINGZ "r"
+	.FILL xE5DE
+	.STRINGZ "ng"
+	.FILL x4571
+	.STRINGZ "s"
+	.FILL x8ADD
+	.STRINGZ "a"
+	.FILL x6587
+	.STRINGZ "t"
+	.FILL x80D6
+	.STRINGZ " "
+	.FILL x0254
+	.STRINGZ "t"
+	.FILL x66EB
+	.STRINGZ " "
+	.FILL xE9EB
+	.STRINGZ "b"
+	.FILL xA8B6
+	.STRINGZ " o"
+	.FILL xAC93
+	.STRINGZ "e "
+	.FILL x47A4
+	.STRINGZ "s"
+	.FILL x21B4
+	.STRINGZ "e "
+	.FILL x63F9
+	.STRINGZ "p"
+	.FILL x054C
+	.STRINGZ "b"
+	.FILL x8B78
+	.STRINGZ "n"
+	.FILL xC5AE
+	.STRINGZ "e "
+	.FILL x0728
+	.STRINGZ " "
+	.FILL x2830
+	.STRINGZ ","
+	.FILL x5963
+	.STRINGZ "t"
+	.FILL x66CB
+	.STRINGZ "g"
+	.FILL x6D7D
+	.STRINGZ "r"
+	.FILL x2465
+	.STRINGZ "i"
+	.FILL x84EF
+	.STRINGZ " i"
+	.FILL x2500
+	.STRINGZ " "
+	.FILL x8ED4
+	.STRINGZ "er"
+	.FILL x2BFE
+	.STRINGZ "i"
+	.FILL x88AA
+	.STRINGZ "ut"
+	.FILL x8EDD
+	.STRINGZ "y"
+	.FILL x8E35
+	.STRINGZ " o"
+	.FILL x6466
+	.STRINGZ " "
+	.FILL x9DBA
+	.STRINGZ "h"
+	.FILL x07EC
+	.STRINGZ "n"
+	.FILL x22AC
+	.STRINGZ " "
+	.FILL x47C3
+	.STRINGZ "t"
+	.FILL x88B8
+	.STRINGZ " "
+	.FILL xA654
+	.STRINGZ "y"
+	.FILL xF2D1
+	.STRINGZ "p"
+	.FILL x6AF2
+	.STRINGZ "is"
+	.FILL x696B
+	.STRINGZ "u"
+	.FILL xAE61
+	.STRINGZ "t"
+	.FILL xC9D3
+	.STRINGZ " t"
+	.FILL xE68D
+	.STRINGZ "t"
+	.FILL xA79D
+	.STRINGZ "or"
+	.FILL xC595
+	.STRINGZ " "
+	.FILL x471D
+	.STRINGZ "o"
+	.FILL xC8C9
+	.STRINGZ "the"
+	.FILL xE73D
+	.STRINGZ " "
+	.FILL x4EB1
+	.STRINGZ "ng"
+	.FILL xA835
+	.STRINGZ "h"
+	.FILL x4352
+	.STRINGZ "rt"
+	.FILL x6484
+	.STRINGZ "t p"
+	.FILL x2EBC
+	.STRINGZ "i"
+	.FILL x00BB
+	.STRINGZ "o"
+	.FILL xFBA2
+	.STRINGZ "s"
+	.FILL xA4F0
+	.STRINGZ "r"
+	.FILL x08F7
+	.STRINGZ "n"
+	.FILL xE8B1
+	.STRINGZ " "
+	.FILL xE8B4
+	.STRINGZ "a"
+	.FILL xCE98
+	.STRINGZ " of"
+	.FILL x2EB0
+	.STRINGZ "y"
+	.FILL xA47F
+	.STRINGZ "i"
+	.FILL xAC82
+	.STRINGZ "ot"
+	.FILL xEB44
+	.STRINGZ "pa"
+	.FILL x4EB6
+	.STRINGZ "s"
+	.FILL x80D5
+	.STRINGZ "t"
+	.FILL x4A83
+	.STRINGZ "rt"
+	.FILL x8426
+	.STRINGZ "."
+	.FILL x4995
+	.STRINGZ "th"
+	.FILL xAEF8
+	.STRINGZ "g"
+	.FILL xC83A
+	.STRINGZ "t"
+	.FILL x6EB2
+	.STRINGZ "o"
+	.FILL x4F37
+	.STRINGZ "th"
+	.FILL x8F9B
+	.STRINGZ "bu"
+	.FILL xA66D
+	.STRINGZ "y,"
+	.FILL x0B4A
+	.STRINGZ "s"
+	.FILL x4C48
+	.STRINGZ "is"
+	.FILL x497C
+	.STRINGZ "u"
+	.FILL xA004
+	.STRINGZ "s"
+	.FILL xC3A8
+	.STRINGZ "t"
+	.FILL xA4E2
+	.STRINGZ "t "
+	.FILL x428C
+	.STRINGZ "y,"
+	.FILL x6203
+	.STRINGZ " s"
+	.FILL x0B65
+	.STRINGZ "n"
+	.FILL xA0A3
+	.STRINGZ "n"
+	.FILL x0DD3
+	.STRINGZ "ng"
+	.FILL xAA71
+	.STRINGZ "r"
+	.FILL xECCA
+	.STRINGZ "p"
+	.FILL x6E94
+	.STRINGZ "g"
+	.FILL xAB94
+	.STRINGZ " "
+	.FILL xA371
+	.STRINGZ "th"
+	.FILL x47C0
+	.STRINGZ "of"
+	.FILL x0EA8
+	.STRINGZ "s"
+	.FILL x84CD
+	.STRINGZ "i"
+	.FILL x4797
+	.STRINGZ "i"
+	.FILL x8363
+	.STRINGZ "w"
+	.FILL x686C
+	.STRINGZ "f"
+	.FILL x602E
+	.STRINGZ "s "
+	.FILL x0737
+	.STRINGZ "a"
+	.FILL x848F
+	.STRINGZ "e"
+	.FILL xEACE
+	.STRINGZ "pa"
+	.FILL x2323
+	.STRINGZ "h"
+	.FILL x42E1
+	.STRINGZ "t"
+	.FILL xE87B
+	.STRINGZ "o"
+	.FILL xE52C
+	.STRINGZ "t"
+	.FILL x4750
+	.STRINGZ "e"
+	.FILL x4836
+	.STRINGZ "u"
+	.FILL xA986
+	.STRINGZ "is"
+	.FILL x2E26
+	.STRINGZ "hi"
+	.FILL xC164
+	.STRINGZ "t"
+	.FILL x2A5F
+	.STRINGZ "h"
+	.FILL x41D9
+	.STRINGZ "he "
+	.FILL xEE65
+	.STRINGZ "or"
+	.FILL xE382
+	.STRINGZ "h"
+	.FILL xE1A7
+	.STRINGZ "s"
+	.FILL x8B27
+	.STRINGZ " "
+	.FILL xCCE3
+	.STRINGZ "p"
+	.FILL x8128
+	.STRINGZ "o"
+	.FILL x049B
+	.STRINGZ "th"
+	.FILL xE7EB
+	.STRINGZ " "
+	.FILL xAC50
+	.STRINGZ "of "
+	.FILL x665C
+	.STRINGZ "s"
+	.FILL x2361
+	.STRINGZ "pa"
+	.FILL xC1A0
+	.STRINGZ "r"
+	.FILL xC697
+	.STRINGZ " o"
+	.FILL x2DB8
+	.STRINGZ "r"
+	.FILL xAAB8
+	.STRINGZ "u"
+	.FILL x036A
+	.STRINGZ "u"
+	.FILL x590F
+	.STRINGZ "p"
+	.FILL x0187
+	.STRINGZ "r"
+	.FILL x4EAC
+	.STRINGZ " "
+	.FILL xC2AF
+	.STRINGZ " "
+	.FILL x0385
+	.STRINGZ "i"
+	.FILL xAD63
+	.STRINGZ " o"
+	.FILL xEFD6
+	.STRINGZ " f"
+	.FILL x1E5F
+	.STRINGZ "s"
+	.FILL xCEF8
+	.STRINGZ "t t"
+	.FILL x6EDC
+	.STRINGZ "n"
+	.FILL xEF49
+	.STRINGZ "or"
+	.FILL xE0F5
+	.STRINGZ "ri"
+	.FILL x6E27
+	.STRINGZ "ng"
+	.FILL xE05D
+	.STRINGZ " "
+	.FILL x4659
+	.STRINGZ "r"
+	.FILL x0EC8
+	.STRINGZ "i"
+	.FILL xAAC1
+	.STRINGZ "f "
+	.FILL xAA42
+	.STRINGZ "i"
+	.FILL x8668
+	.STRINGZ "t"
+	.FILL x6754
+	.STRINGZ " "
+	.FILL x67F7
+	.STRINGZ "er"
+	.FILL xC6B6
+	.STRINGZ "n"
+	.FILL x87E6
+	.STRINGZ "i"
+	.FILL x6DDB
+	.STRINGZ "th"
+	.FILL x29EA
+	.STRINGZ " "
+	.FILL x0CA7
+	.STRINGZ " "
+	.FILL x8CF5
+	.STRINGZ "t "
+	.FILL xECA0
+	.STRINGZ "s"
+	.FILL xE7C6
+	.STRINGZ "h"
+	.FILL x0549
+	.STRINGZ "o"
+	.FILL xE46E
+	.STRINGZ "o"
+	.FILL x4C0C
+	.STRINGZ "r"
+	.FILL xE46E
+	.STRINGZ "r"
+	.FILL x2A63
+	.STRINGZ " "
+	.FILL x0CD9
+	.STRINGZ "t"
+	.FILL x8B31
+	.STRINGZ " "
+	.FILL x2FE1
+	.STRINGZ " "
+	.FILL x64C8
+	.STRINGZ "r"
+	.FILL x6848
+	.STRINGZ "r"
+	.FILL xA166
+	.STRINGZ "."
+	.FILL xE9DD
+	.STRINGZ "p"
+	.FILL x00C2
+	.STRINGZ "n"
+	.FILL x40EF
+	.STRINGZ "ou"
+	.FILL xD608
+	.STRINGZ "y"
+	.FILL xC03C
+	.STRINGZ "n"
+	.FILL xCE84
+	.STRINGZ "a"
+	.FILL x4A53
+	.STRINGZ " "
+	.FILL x0E98
+	.STRINGZ "b"
+	.FILL xC566
+	.STRINGZ "f"
+	.FILL xCD10
+	.STRINGZ "is "
+	.FILL xC7F1
+	.STRINGZ " o"
+	.FILL xAED4
+	.STRINGZ "p"
+	.FILL x8D9F
+	.STRINGZ " s"
+	.FILL x4448
+	.STRINGZ "p"
+	.FILL x0CC8
+	.STRINGZ "an"
+	.FILL x63F6
+	.STRINGZ "is "
+	.FILL xC55F
+	.STRINGZ "of"
+	.FILL xCF19
+	.STRINGZ "r"
+	.FILL xC640
+	.STRINGZ "r"
+	.FILL xA56A
+	.STRINGZ "t"
+	.FILL x2080
+	.STRINGZ "r"
+	.FILL x005A
+	.STRINGZ "."
+	.FILL x425C
+	.STRINGZ "i"
+	.FILL xA898
+	.STRINGZ "t"
+	.FILL xCF71
+	.STRINGZ "o"
+	.FILL x6FC4
+	.STRINGZ "th"
+	.FILL xA5F7
+	.STRINGZ "r."
+	.FILL xCD87
+	.STRINGZ "t"
+	.FILL x865A
+	.STRINGZ "r"
+	.FILL x4C5A
+	.STRINGZ " "
+	.FILL xA12A
+	.STRINGZ "r"
+	.FILL x45F7
+	.STRINGZ ", "
+	.FILL xA5B6
+	.STRINGZ "r."
+	.FILL x67C3
+	.STRINGZ " "
+	.FILL x40A6
+	.STRINGZ "in"
+	.FILL x8DDC
+	.STRINGZ "f"
+	.FILL xA661
+	.STRINGZ "g "
+	.FILL x40C8
+	.STRINGZ "t"
+	.FILL xC563
+	.STRINGZ "nd"
+	.FILL x3625
+	.STRINGZ "n"
+	.FILL x2F86
+	.STRINGZ "e"
+	.FILL x095E
+	.STRINGZ "s"
+	.FILL xA61B
+	.STRINGZ "he"
+	.FILL x867E
+	.STRINGZ " t"
+	.FILL x8FB3
+	.STRINGZ "t "
+	.FILL x6F6F
+	.STRINGZ "rr"
+	.FILL x201C
+	.STRINGZ "pa"
+	.FILL x84AF
+	.STRINGZ "a"
+	.FILL xCC35
+	.STRINGZ "f"
+	.FILL x4780
+	.STRINGZ "y"
+	.FILL xE4E3
+	.STRINGZ "r"
+	.FILL xA356
+	.STRINGZ "n"
+	.FILL x6E04
+	.STRINGZ "ar"
+	.FILL x68F0
+	.STRINGZ "s"
+	.FILL xC035
+	.STRINGZ "t"
+	.FILL x676A
+	.STRINGZ "t"
+	.FILL xCBE9
+	.STRINGZ " "
+	.FILL xFB1A
+	.STRINGZ "r"
+	.FILL xA98E
+	.STRINGZ "u"
+	.FILL xCF02
+	.STRINGZ "t"
+	.FILL x4D39
+	.STRINGZ "n"
+	.FILL x2635
+	.STRINGZ "n"
+	.FILL xA51A
+	.STRINGZ "w"
+	.FILL x8469
+	.STRINGZ "n"
+	.FILL x4EDE
+	.STRINGZ "a"
+	.FILL x2657
+	.STRINGZ "i"
+	.FILL x5C0F
+	.STRINGZ "t"
+	.FILL x038F
+	.STRINGZ "t!"
+	.FILL xD17A
+	.STRINGZ ""
+
+	.END
