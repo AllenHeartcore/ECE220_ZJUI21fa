@@ -1,5 +1,5 @@
 EXE := 
-CFLAGS := -Wall -g -ansi
+CFLAGS := -Wall -g 
 TARGET := c220${EXE}
 OFILES := ece220_lex.yy.o ece220_parse.tab.o ece220_symtab.o ece220_label.o \
 	  mp11base.o mp11.o

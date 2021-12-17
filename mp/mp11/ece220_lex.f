@@ -52,7 +52,7 @@
 /* not part of ANSI, but in gcclib */
 extern char* strdup (const char* s);
 extern int fileno (FILE* stream);
-extern int vsnprintf (char* s, size_t len, const char* fmt, ...);
+extern int vsnprintf (char* s, size_t len, const char* fmt, va_list ap);
 
 
 ece220_token_t ece220token;
