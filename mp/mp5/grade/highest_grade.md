@@ -48,3 +48,9 @@ Total: Not Yet Tallied
 late punishment: 0
 
 Functionality Final score:: 49
+
+## Regrade:
+
+manual regrade +0
+
+Functionality Final score:: 49
